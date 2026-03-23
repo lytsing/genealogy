@@ -4,7 +4,8 @@
         "serve": "honkit serve"
     },
     "devDependencies": {
-        "honkit": "^6.1.7"
+        "honkit": "^6.1.7",
+        "honkit-plugin-tbfed-pagefooter": "^0.0.8"
     },
     "dependencies": {
         "honkit-plugin-katex": "^1.1.7"
