@@ -12,7 +12,8 @@
         "copyright": "Copyright &copy; 黄氏家族 2026",
         "show_modify_time": true,
         "modify_label": "该文章修订于：",
-        "modify_format": "YYYY-MM-DD HH:mm:ss"
+        "modify_format": "YYYY-MM-DD HH:mm:ss",
+        "show_power": false
     }
   }
 }
