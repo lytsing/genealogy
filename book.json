@@ -2,7 +2,7 @@
   "title": "黄福军公族谱",
   "description": "广西平果市旧城",
   "author": "黄利庆",
-  "language": "zh",
+  "language": "zh-hans",
   "plugins": ["katex"],
   "pluginsConfig": {
     "katex": {
