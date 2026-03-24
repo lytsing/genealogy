@@ -164,13 +164,33 @@ coverY: 0
 
 ### 六耐屯
 
-<table><thead><tr><th>姓名</th><th data-type="number">金额（元）</th><th>姓名</th><th data-type="number">金额（元）</th></tr></thead><tbody><tr><td>宜重</td><td>50</td><td></td><td>null</td></tr><tr><td>宜福</td><td>null</td><td></td><td>null</td></tr></tbody></table>
+| 姓名 | 金额（元） | 姓名 | 金额（元） |
+|------|-----------|------|-----------|
+| 宜重 | 50        |      |           |
+| 宜福 |           |      |           |
 
 ### 琴林屯
 
-<table><thead><tr><th>姓名</th><th data-type="number">金额（元）</th><th>姓名</th></tr></thead><tbody><tr><td>心球</td><td>50</td><td></td></tr><tr><td>心浪</td><td>50</td><td></td></tr><tr><td>心申</td><td>50</td><td></td></tr><tr><td>心华</td><td>50</td><td></td></tr><tr><td>宜万</td><td>50</td><td></td></tr></tbody></table>
+| 姓名 | 金额（元） | 姓名 |
+|------|-----------|------|
+| 心球 | 50        |      |
+| 心浪 | 50        |      |
+| 心申 | 50        |      |
+| 心华 | 50        |      |
+| 宜万 | 50        |      |
 
 ### 内龙古枫屯
 
-<table><thead><tr><th>姓名</th><th data-type="number">金额（元）</th><th>姓名</th></tr></thead><tbody><tr><td>振杰</td><td>200</td><td></td></tr><tr><td>振先</td><td>null</td><td></td></tr><tr><td>汉福</td><td>null</td><td></td></tr><tr><td>贵生</td><td>null</td><td></td></tr><tr><td>启汉</td><td>null</td><td></td></tr><tr><td>金念</td><td>null</td><td></td></tr><tr><td>金宏</td><td>null</td><td></td></tr><tr><td>振辉</td><td>null</td><td></td></tr><tr><td>照志</td><td>null</td><td></td></tr></tbody></table>
+| 姓名 | 金额（元） | 姓名 |
+|------|-----------|------|
+| 振杰 | 200       |      |
+| 振先 |           |      |
+| 汉福 |           |      |
+| 贵生 |           |      |
+| 启汉 |           |      |
+| 金念 |           |      |
+| 金宏 |           |      |
+| 振辉 |           |      |
+| 照志 |           |      |
+
 
