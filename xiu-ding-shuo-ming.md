@@ -1,6 +1,6 @@
 # 修订说明
 
-&#x20;      本电子书是对照纸质公族谱，使用手机 iPhone 相机识别文字功能拷贝一份过来，并加以文字校对。因为 Microsoft Word 文字排版与网页文字排版有一些差别，不可能是完全一致。关于文字排版，参考阮一峰的《[中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)》以及 LCTT 的《[中文排版指北](https://guide.rustt.org/translation-guide/composing.html)》，对字间距、标点符号等做了调整。碑文使用古文言文书写，有通假字与偏僻字，添加了注音注解，同时修改了族谱中一些错别字。记录如下：&#x20;
+&#x20;      本电子书是对照纸质公族谱，使用手机 iPhone 相机识别文字功能拷贝一份过来，并使用 AI 加以文字校对。因为 Microsoft Word 文字排版与网页文字排版有一些差别，不可能是完全一致。关于文字排版，参考阮一峰的《[中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)》以及 LCTT 的《[中文排版指北](https://guide.rustt.org/translation-guide/composing.html)》，对字间距、标点符号等做了调整。碑文使用古文言文书写，有通假字与偏僻字，添加了注音注解，同时修改了族谱中一些错别字。记录如下：&#x20;
 
 ### 勘误表
 
