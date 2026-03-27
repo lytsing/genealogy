@@ -3,13 +3,15 @@
   "description": "广西平果市旧城",
   "author": "黄利庆",
   "language": "zh-hans",
-  "styles": {
-    "website": "styles/website.css"
-  },
-  "plugins": ["katex", "tbfed-pagefooter"],
+  "plugins": ["katex", "tbfed-pagefooter", "theme-default"],
   "pluginsConfig": {
     "katex": {
       "css": "https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"
+    },
+    "theme-default": {
+      "styles": {
+        "website": "styles/website.css"
+      }
     },
     "tbfed-pagefooter": {
         "copyright": "Copyright &copy; 黄氏家族 2026",

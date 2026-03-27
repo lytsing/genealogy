@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "honkit build && node scripts/fix-viewport.mjs",
+        "build": "honkit build",
         "serve": "honkit serve"
     },
     "devDependencies": {

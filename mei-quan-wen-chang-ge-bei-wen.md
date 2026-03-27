@@ -64,4 +64,4 @@ layout: landing
 
 ### 图片
 
-![](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)![](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)![文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
+![](http://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)![](http://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)![文昌阁、水月宫（记忆画）](http://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
