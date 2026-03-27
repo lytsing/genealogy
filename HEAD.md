@@ -28,7 +28,7 @@ description: 谱首寄语
 
 
 
-华冠题诗
+<p style="text-align:right">华冠题诗</p>
 
-2010 年 5 月 27 日于南宁
+<p style="text-align:right">2010 年 5 月 27 日于南宁</p>
 

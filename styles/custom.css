@@ -54,14 +54,26 @@
   border-radius: 10px;
 }
 
-.markdown-section table th,
-.markdown-section table td {
+.markdown-section table th {
   white-space: nowrap;
+}
+
+.markdown-section table td {
+  white-space: normal;
+  word-break: break-word;
 }
 
 .markdown-section blockquote {
   color: #4b5563;
   border-left-color: rgba(0, 0, 0, 0.16);
+}
+
+/* ===== Images: prevent overflow ===== */
+.markdown-section img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.5em 0;
 }
 
 /* ===== Mobile ===== */
@@ -80,6 +92,19 @@
 
   .markdown-section pre {
     padding: 0.85em 0.9em;
+  }
+
+  /* Sidebar: larger touch targets */
+  .book-summary ul.summary li a,
+  .book-summary ul.summary li span {
+    padding: 12px 15px;
+  }
+
+  /* Navigation arrows: larger tap area */
+  .navigation {
+    font-size: 36px;
+    min-height: 50px;
+    padding: 12px 8px;
   }
 }
 

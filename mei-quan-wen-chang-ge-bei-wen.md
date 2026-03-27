@@ -24,9 +24,9 @@ layout: landing
 
 
 
-&#x20;                                                                                                                     黄峻冠拜撰
+<p style="text-align:right">黄峻冠拜撰</p>
 
-&#x20;                                                                                                    咸丰四年岁次甲寅孟春月吉日立
+<p style="text-align:right">咸丰四年岁次甲寅孟春月吉日立</p>
 
 （注：原文繁体字无标点，此标点正确与否，共商榷）
 
@@ -64,4 +64,8 @@ layout: landing
 
 ### 图片
 
-![](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)![](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)![文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
+![](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)
+
+![](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)
+
+![文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
