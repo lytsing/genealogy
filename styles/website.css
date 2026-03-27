@@ -20,6 +20,36 @@
   }
 }
 
+/* Chinese-first typography for better cross-platform readability. */
+:root {
+  --font-sans-zh:
+    -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC",
+    "WenQuanYi Micro Hei", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+body,
+.book-summary,
+.book-header,
+.markdown-section {
+  font-family: var(--font-sans-zh);
+}
+
+/* Restore mobile/browser text autosizing where theme disables it. */
+html,
+body,
+.markdown-section {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.markdown-section code,
+.markdown-section pre {
+  font-family: var(--font-mono);
+}
+
 /* Keep keyboard focus visible for accessibility. */
 .book-header .btn:focus,
 .book-summary ul.summary li a:focus,
@@ -96,5 +126,18 @@
 
   .page-footer {
     font-size: 0.875rem;
+  }
+}
+
+/* Improve long-form Chinese readability on desktop/tablet. */
+@media screen and (min-width: 801px) {
+  body {
+    font-size: 15.5px;
+    line-height: 1.78;
+  }
+
+  .markdown-section p,
+  .markdown-section li {
+    line-height: 1.9;
   }
 }
