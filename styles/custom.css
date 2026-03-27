@@ -1,0 +1,95 @@
+/* ===== Chinese readability ===== */
+.markdown-section {
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+.markdown-section p {
+  margin-bottom: 1em;
+  text-align: justify;
+}
+
+.markdown-section h1,
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4 {
+  letter-spacing: 0;
+}
+
+.markdown-section a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ===== Code blocks ===== */
+.markdown-section code {
+  background: #f6f7f9;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  padding: 0.15em 0.35em;
+}
+
+.markdown-section pre {
+  background: #f6f7f9;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markdown-section pre > code {
+  font-size: 0.9em;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* ===== Tables: horizontal scroll on overflow ===== */
+.markdown-section table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+}
+
+.markdown-section table th,
+.markdown-section table td {
+  white-space: nowrap;
+}
+
+.markdown-section blockquote {
+  color: #4b5563;
+  border-left-color: rgba(0, 0, 0, 0.16);
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  .markdown-section {
+    font-size: 16px;
+  }
+
+  .page-inner {
+    padding: 16px 14px 40px 14px;
+  }
+
+  .markdown-section h1 { font-size: 1.75em; }
+  .markdown-section h2 { font-size: 1.45em; }
+  .markdown-section h3 { font-size: 1.25em; }
+
+  .markdown-section pre {
+    padding: 0.85em 0.9em;
+  }
+}
+
+@media (max-width: 360px) {
+  .markdown-section {
+    font-size: 15px;
+  }
+
+  .page-inner {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}

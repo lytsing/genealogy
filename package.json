@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "honkit build",
+        "build": "honkit build && cat styles/custom.css >> _book/gitbook/style.css",
         "serve": "honkit serve"
     },
     "devDependencies": {
