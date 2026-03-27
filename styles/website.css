@@ -1,0 +1,100 @@
+/* Keep wide markdown tables scrollable on smaller screens. */
+@media screen and (max-width: 800px) {
+  .book .book-body .page-wrapper .page-inner section.normal table,
+  .book .book-body .page-wrapper .page-inner section.markdown-section table,
+  .markdown-section table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .book .book-body .page-wrapper .page-inner section.normal table th,
+  .book .book-body .page-wrapper .page-inner section.normal table td,
+  .book .book-body .page-wrapper .page-inner section.markdown-section table th,
+  .book .book-body .page-wrapper .page-inner section.markdown-section table td,
+  .markdown-section table th,
+  .markdown-section table td {
+    white-space: nowrap;
+  }
+}
+
+/* Keep keyboard focus visible for accessibility. */
+.book-header .btn:focus,
+.book-summary ul.summary li a:focus,
+#book-search-input input:focus,
+.navigation:focus,
+.markdown-section a:focus {
+  outline: 2px solid #18bfef;
+  outline-offset: 2px;
+}
+
+/* Prefer focus-visible and avoid always-on focus ring for mouse users. */
+.book-header .btn:focus:not(:focus-visible),
+.book-summary ul.summary li a:focus:not(:focus-visible),
+#book-search-input input:focus:not(:focus-visible),
+.navigation:focus:not(:focus-visible),
+.markdown-section a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Ensure key controls are easier to tap on touch devices. */
+.book-header .btn,
+.book-summary ul.summary li a,
+.navigation,
+#book-search-input input,
+.page-footer a {
+  min-height: 44px;
+}
+
+/* Use hover styles only on pointer/hover capable devices. */
+@media (hover: hover) and (pointer: fine) {
+  .page-footer .copyright:hover,
+  .page-footer .footer-modification:hover {
+    color: #18bfef;
+    transform: scale(1.02);
+  }
+}
+
+/* Touch devices get active feedback instead of hover. */
+@media (hover: none) and (pointer: coarse) {
+  .page-footer .copyright:hover,
+  .page-footer .footer-modification:hover {
+    color: inherit;
+    transform: none;
+  }
+
+  .page-footer a:active,
+  .book-header .btn:active,
+  .book-summary ul.summary li a:active,
+  .navigation:active {
+    opacity: 0.75;
+  }
+}
+
+/* Mobile readability tweaks for long-form content. */
+@media screen and (max-width: 800px) {
+  body {
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .page-inner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .markdown-section p,
+  .markdown-section li {
+    line-height: 1.85;
+  }
+
+  .markdown-section p {
+    margin-bottom: 1em;
+  }
+
+  .page-footer {
+    font-size: 0.875rem;
+  }
+}
