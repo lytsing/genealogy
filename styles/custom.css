@@ -1,11 +1,11 @@
 /* ===== Chinese readability ===== */
 .markdown-section {
-  line-height: 1.85;
+  line-height: 1.9;
   letter-spacing: 0.01em;
 }
 
 .markdown-section p {
-  margin-bottom: 1em;
+  margin: 0 0 1.15em;
   text-align: justify;
 }
 
@@ -14,6 +14,26 @@
 .markdown-section h3,
 .markdown-section h4 {
   letter-spacing: 0;
+}
+
+.markdown-section h1 {
+  margin-top: 1.35em;
+  margin-bottom: 0.7em;
+}
+
+.markdown-section h2 {
+  margin-top: 1.2em;
+  margin-bottom: 0.65em;
+}
+
+.markdown-section h3 {
+  margin-top: 1.05em;
+  margin-bottom: 0.55em;
+}
+
+.markdown-section h4 {
+  margin-top: 0.95em;
+  margin-bottom: 0.5em;
 }
 
 .markdown-section a {
@@ -47,11 +67,30 @@
 /* ===== Tables: horizontal scroll on overflow ===== */
 .markdown-section table {
   display: block;
+  position: relative;
   max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 10px;
+}
+
+.markdown-section table.table-scrollable {
+  background-clip: padding-box;
+}
+
+.markdown-section table.table-hint-left {
+  box-shadow: inset 12px 0 10px -10px rgba(0, 0, 0, 0.2);
+}
+
+.markdown-section table.table-hint-right {
+  box-shadow: inset -12px 0 10px -10px rgba(0, 0, 0, 0.2);
+}
+
+.markdown-section table.table-hint-left.table-hint-right {
+  box-shadow:
+    inset 12px 0 10px -10px rgba(0, 0, 0, 0.2),
+    inset -12px 0 10px -10px rgba(0, 0, 0, 0.2);
 }
 
 .markdown-section table th {
@@ -117,4 +156,58 @@
     padding-left: 12px;
     padding-right: 12px;
   }
+}
+
+/* ===== Night theme readability ===== */
+.book.color-theme-2 .markdown-section a {
+  color: #8ec5ff;
+}
+
+.book.color-theme-2 .markdown-section a:hover,
+.book.color-theme-2 .markdown-section a:focus {
+  color: #b7dcff;
+}
+
+.book.color-theme-2 .markdown-section code {
+  color: #e8edf5;
+  background: #1f2633;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.book.color-theme-2 .markdown-section pre {
+  color: #e8edf5;
+  background: #1f2633;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.book.color-theme-2 .markdown-section pre > code {
+  color: inherit;
+}
+
+.book.color-theme-2 .markdown-section blockquote {
+  color: #cdd6e3;
+  border-left-color: rgba(151, 197, 255, 0.6);
+}
+
+.book.color-theme-2 .markdown-section table {
+  background: #1b2230;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.book.color-theme-2 .markdown-section table th {
+  color: #ecf2fb;
+  background: #283247;
+}
+
+.book.color-theme-2 .markdown-section table td {
+  color: #d7deea;
+}
+
+.book.color-theme-2 .markdown-section table tr {
+  background-color: #1f2736;
+  border-top-color: rgba(255, 255, 255, 0.14);
+}
+
+.book.color-theme-2 .markdown-section table tr:nth-child(2n) {
+  background-color: #252f42;
 }
