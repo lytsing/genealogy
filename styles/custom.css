@@ -36,6 +36,41 @@
   margin-bottom: 0.5em;
 }
 
+.markdown-section .heading-with-share {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.markdown-section .share-anchor {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  color: #4b5563;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 9px;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-1px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.markdown-section .heading-with-share:hover .share-anchor,
+.markdown-section .heading-with-share:focus-within .share-anchor,
+.markdown-section .heading-with-share.show-share .share-anchor {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.markdown-section .share-anchor--flash {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
 .markdown-section a {
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -145,6 +180,12 @@
     min-height: 50px;
     padding: 12px 8px;
   }
+
+  .markdown-section .share-anchor {
+    font-size: 12px;
+    min-height: 32px;
+    padding: 8px 10px;
+  }
 }
 
 @media (max-width: 360px) {
@@ -187,6 +228,12 @@
 .book.color-theme-2 .markdown-section blockquote {
   color: #cdd6e3;
   border-left-color: rgba(151, 197, 255, 0.6);
+}
+
+.book.color-theme-2 .markdown-section .share-anchor {
+  color: #dbe7f8;
+  background: #273247;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .book.color-theme-2 .markdown-section table {
