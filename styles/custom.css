@@ -1,7 +1,20 @@
 /* ===== Chinese readability ===== */
 .markdown-section {
+  /* 系统字体栈：各平台用本机中文黑体，无额外下载、WebView 友好 */
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei UI",
+    "Microsoft YaHei",
+    "Noto Sans CJK SC",
+    "Source Han Sans SC",
+    "WenQuanYi Micro Hei",
+    sans-serif;
   line-height: 1.9;
   letter-spacing: 0.01em;
+  text-rendering: optimizeLegibility;
 }
 
 .markdown-section p {
