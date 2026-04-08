@@ -1,8 +1,3 @@
----
-cover: >-
-  https://images.unsplash.com/photo-1669295384050-a1d4357bd1d7?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzA0NjkwNTY&ixlib=rb-4.0.3&q=80
-coverY: 0
----
 
 # 几个问题的说明
 

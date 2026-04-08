@@ -1,9 +1,3 @@
----
-cover: >-
-  https://images.unsplash.com/photo-1669295384050-a1d4357bd1d7?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzA0NjkwNTY&ixlib=rb-4.0.3&q=80
-coverY: 0
-layout: landing
----
 
 # 梅泉文昌阁碑文
 
@@ -64,8 +58,8 @@ layout: landing
 
 ### 图片
 
-![](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)
+（电子书离线生成：原图链接）[wq1.jpg](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)
 
-![](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)
+（电子书离线生成：原图链接）[wcg21.jpg](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)
 
-![文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
+（电子书离线生成：原图链接）[文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)

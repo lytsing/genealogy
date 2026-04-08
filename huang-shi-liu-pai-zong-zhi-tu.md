@@ -1,8 +1,5 @@
 ---
 description: 百椅墓碑文
-cover: >-
-  https://images.unsplash.com/photo-1669279594631-401ecc3883d5?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzA4NDgyNDE&ixlib=rb-4.0.3&q=80
-coverY: 0
 ---
 
 # 黄氏流派宗枝图

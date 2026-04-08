@@ -1,8 +1,5 @@
 ---
 description: 黄峻冠公其人其事
-cover: >-
-  https://images.unsplash.com/photo-1670258880155-2c9fc80b1fde?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwxOTcwMjR8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NzA4NDgyNDE&ixlib=rb-4.0.3&q=80
-coverY: 0
 ---
 
 # 古迹寻踪
