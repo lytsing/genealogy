@@ -384,3 +384,44 @@
 .book.color-theme-2 .back-to-top:focus {
   background: rgba(255, 255, 255, 0.35);
 }
+
+/* ===== TOC Toggle (mobile) ===== */
+.toc-toggle {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .toc-toggle {
+    display: block;
+    position: fixed;
+    bottom: 24px;
+    left: 14px;
+    z-index: 900;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 20px;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: background 160ms ease;
+  }
+
+  .toc-toggle:hover,
+  .toc-toggle:focus {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .book.color-theme-2 .toc-toggle {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .book.color-theme-2 .toc-toggle:hover,
+  .book.color-theme-2 .toc-toggle:focus {
+    background: rgba(255, 255, 255, 0.35);
+  }
+}
