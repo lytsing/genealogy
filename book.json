@@ -13,6 +13,7 @@
         "show_modify_time": true,
         "modify_label": "该文章修订于：",
         "modify_format": "YYYY-MM-DD HH:mm:ss",
+        "fontSize": 14,
         "show_power": false
     }
   }

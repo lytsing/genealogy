@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "honkit build && cat styles/custom.css >> _book/gitbook/style.css && printf '\\n' >> _book/gitbook/theme.js && cat scripts/table-scroll-hints.js >> _book/gitbook/theme.js && printf '\\n' >> _book/gitbook/theme.js && cat scripts/share-links.js >> _book/gitbook/theme.js && printf '\\n' >> _book/gitbook/theme.js && cat scripts/image-performance.js >> _book/gitbook/theme.js",
+        "build": "honkit build",
         "serve": "honkit serve"
     },
     "devDependencies": {

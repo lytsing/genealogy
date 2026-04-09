@@ -1,0 +1,14 @@
+{% extends template.self %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ "styles/custom.css"|resolveFile }}">
+{% endblock %}
+
+{% block javascript %}
+    {{ super() }}
+    <script src="{{ "scripts/table-scroll-hints.js"|resolveFile }}"></script>
+    <script src="{{ "scripts/share-links.js"|resolveFile }}"></script>
+    <script src="{{ "scripts/image-performance.js"|resolveFile }}"></script>
+    <script src="{{ "scripts/image-lightbox.js"|resolveFile }}"></script>
+{% endblock %}
