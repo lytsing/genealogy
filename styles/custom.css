@@ -330,3 +330,57 @@
   -webkit-user-select: none;
   touch-action: none;
 }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 900;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 22px;
+  line-height: 42px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 200ms ease, visibility 200ms ease, transform 200ms ease, background 160ms ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-top-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover,
+.back-to-top:focus {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+@media (max-width: 600px) {
+  .back-to-top {
+    bottom: 18px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
+  }
+}
+
+.book.color-theme-2 .back-to-top {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.book.color-theme-2 .back-to-top:hover,
+.book.color-theme-2 .back-to-top:focus {
+  background: rgba(255, 255, 255, 0.35);
+}
