@@ -1,3 +1,9 @@
+/* ===== Prevent Android pull-to-refresh on content scroll ===== */
+.book-body,
+.body-inner {
+  overscroll-behavior-y: contain;
+}
+
 /* ===== Chinese readability ===== */
 .markdown-section {
   /* 系统字体栈：各平台用本机中文黑体，无额外下载、WebView 友好 */
