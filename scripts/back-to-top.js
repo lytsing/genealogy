@@ -8,7 +8,7 @@
     btn.type = "button";
     btn.className = "back-to-top";
     btn.setAttribute("aria-label", "回到顶部");
-    btn.innerHTML = "&#8679;";
+    btn.innerHTML = "&#8593;";
     document.body.appendChild(btn);
 
     btn.addEventListener("click", function () {

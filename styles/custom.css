@@ -414,6 +414,17 @@ a {
   }
 }
 
+/* Inside React Native WebView: SafeAreaView already handles insets,
+   env() would double-count. Use fixed offsets and bump up to clear
+   the HonKit prev/next navigation bar at the bottom of the page. */
+.rn-webview .back-to-top {
+  bottom: 60px !important;
+}
+
+.rn-webview .toc-toggle {
+  bottom: 60px !important;
+}
+
 .book.color-theme-2 .back-to-top {
   background: rgba(255, 255, 255, 0.2);
 }
