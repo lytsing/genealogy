@@ -260,6 +260,13 @@
     if (e.key === "Escape" || e.keyCode === 27) closeLightbox();
   });
 
+  // Suppress context menu (long-press on iOS/Android) inside the lightbox
+  document.addEventListener("contextmenu", function (e) {
+    if (overlay && overlay.classList.contains("lightbox-visible")) {
+      e.preventDefault();
+    }
+  });
+
   // --- Bind click on images ---
   function setupLightbox() {
     var images = document.querySelectorAll(".markdown-section img");
