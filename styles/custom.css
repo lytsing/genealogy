@@ -1,3 +1,26 @@
+/* ===== Reading progress bar ===== */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  height: 3px;
+  width: 0%;
+  background: #4b7cf3;
+  transition: width 80ms linear;
+  pointer-events: none;
+}
+
+.book.color-theme-2 .reading-progress {
+  background: #6b9fff;
+}
+
+/* ===== Sidebar momentum scroll ===== */
+.book-summary {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
 /* ===== Remove tap highlight on interactive elements ===== */
 button,
 a {
@@ -461,7 +484,8 @@ a {
   .lightbox-overlay,
   .lightbox-img-wrap,
   .back-to-top,
-  .toc-backdrop {
+  .toc-backdrop,
+  .reading-progress {
     transition: none !important;
   }
 }

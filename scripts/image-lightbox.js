@@ -1,5 +1,6 @@
 ;(function () {
   var overlay = null;
+  var lastFocusedEl = null;
 
   function createOverlay() {
     if (overlay) return overlay;
@@ -72,11 +73,18 @@
     currentX = 0;
     currentY = 0;
 
+    // Save focus origin so we can restore it on close
+    lastFocusedEl = document.activeElement;
+
     // Force reflow then add visible class for animation
     el.offsetHeight; // eslint-disable-line no-unused-expressions
     el.classList.add("lightbox-visible");
     lockScroll();
     attachOverlayTouch();
+
+    // Move focus to close button for screen-reader / keyboard users
+    var closeBtn = el.querySelector(".lightbox-close");
+    if (closeBtn) closeBtn.focus();
 
     // Android back button: push a history entry so back closes the lightbox
     if (window.history && window.history.pushState) {
@@ -89,6 +97,11 @@
     detachOverlayTouch();
     overlay.classList.remove("lightbox-visible");
     unlockScroll();
+    // Return focus to the element that opened the lightbox
+    if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
+      lastFocusedEl.focus();
+      lastFocusedEl = null;
+    }
   }
 
   // Handle Android hardware back button
