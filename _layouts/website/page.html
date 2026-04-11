@@ -3,7 +3,6 @@
 {% block head %}
     {{ super() }}
     <script>!function(){var m=document.querySelector('meta[name="viewport"]');m&&m.content.indexOf('viewport-fit')<0&&(m.content+=',viewport-fit=cover')}()</script>
-    <script>!function(){if(/ReactNative|wv|WebView/.test(navigator.userAgent)||window.ReactNativeWebView){document.documentElement.classList.add('rn-webview');document.addEventListener('DOMContentLoaded',function(){document.body&&document.body.classList.add('rn-webview')})}}()</script>
     <link rel="stylesheet" href="{{ "styles/custom.css"|resolveFile }}">
 {% endblock %}
 
