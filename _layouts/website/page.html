@@ -2,6 +2,7 @@
 
 {% block head %}
     {{ super() }}
+    <script>!function(){var m=document.querySelector('meta[name="viewport"]');m&&m.content.indexOf('viewport-fit')<0&&(m.content+=',viewport-fit=cover')}()</script>
     <link rel="stylesheet" href="{{ "styles/custom.css"|resolveFile }}">
 {% endblock %}
 
@@ -13,4 +14,5 @@
     <script src="{{ "scripts/image-lightbox.js"|resolveFile }}"></script>
     <script src="{{ "scripts/back-to-top.js"|resolveFile }}"></script>
     <script src="{{ "scripts/toc-toggle.js"|resolveFile }}"></script>
+    <script src="{{ "scripts/swipe-navigation.js"|resolveFile }}"></script>
 {% endblock %}

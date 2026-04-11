@@ -32,6 +32,33 @@
     return overlay;
   }
 
+  // --- Scroll lock (robust iOS support) ---
+  var scrollLockScrollY = 0;
+
+  function lockScroll() {
+    scrollLockScrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.cssText =
+      "position:fixed;width:100%;top:-" + scrollLockScrollY + "px;overflow-y:scroll;";
+    // Also lock the GitBook scroll container if present
+    var inner = document.querySelector(".book-body .body-inner") ||
+                document.querySelector(".body-inner");
+    if (inner) {
+      inner.__savedOverflow = inner.style.overflow;
+      inner.style.overflow = "hidden";
+    }
+  }
+
+  function unlockScroll() {
+    document.body.style.cssText = "";
+    window.scrollTo(0, scrollLockScrollY);
+    var inner = document.querySelector(".book-body .body-inner") ||
+                document.querySelector(".body-inner");
+    if (inner && inner.__savedOverflow !== undefined) {
+      inner.style.overflow = inner.__savedOverflow;
+      delete inner.__savedOverflow;
+    }
+  }
+
   function openLightbox(src, alt) {
     var el = createOverlay();
     var img = el.querySelector(".lightbox-img");
@@ -48,14 +75,28 @@
     // Force reflow then add visible class for animation
     el.offsetHeight; // eslint-disable-line no-unused-expressions
     el.classList.add("lightbox-visible");
-    document.body.style.overflow = "hidden";
+    lockScroll();
+    attachOverlayTouch();
+
+    // Android back button: push a history entry so back closes the lightbox
+    if (window.history && window.history.pushState) {
+      window.history.pushState({ lightbox: true }, "");
+    }
   }
 
   function closeLightbox() {
     if (!overlay) return;
+    detachOverlayTouch();
     overlay.classList.remove("lightbox-visible");
-    document.body.style.overflow = "";
+    unlockScroll();
   }
+
+  // Handle Android hardware back button
+  window.addEventListener("popstate", function (e) {
+    if (overlay && overlay.classList.contains("lightbox-visible")) {
+      closeLightbox();
+    }
+  });
 
   // --- Pinch-zoom & pan state ---
   var currentScale = 1;
@@ -115,11 +156,12 @@
 
   function handleTouchMove(e) {
     if (!overlay || !overlay.classList.contains("lightbox-visible")) return;
+    // Always prevent scroll bleed-through on iOS
+    e.preventDefault();
     var wrap = overlay.querySelector(".lightbox-img-wrap");
     if (!wrap) return;
 
     if (isPinching && e.touches.length === 2) {
-      e.preventDefault();
       var dist = getDistance(e.touches[0], e.touches[1]);
       var scale = Math.min(Math.max(startScale * (dist / startDist), 1), 5);
       var mid = getMidpoint(e.touches[0], e.touches[1]);
@@ -129,7 +171,6 @@
       currentY = startY + (mid.y - startMidY);
       applyTransform(wrap);
     } else if (isPanning && e.touches.length === 1 && currentScale > 1) {
-      e.preventDefault();
       currentX = startX + (e.touches[0].clientX - startMidX);
       currentY = startY + (e.touches[0].clientY - startMidY);
       applyTransform(wrap);
@@ -190,12 +231,29 @@
     lastTap = now;
   }
 
-  document.addEventListener("touchstart", function (e) {
+  // Non-passive listeners only while overlay is open (avoids hurting page scroll).
+  var overlayTouchBound = false;
+
+  function onOverlayTouchStart(e) {
     handleDoubleTap(e);
     handleTouchStart(e);
-  }, { passive: false });
-  document.addEventListener("touchmove", handleTouchMove, { passive: false });
-  document.addEventListener("touchend", handleTouchEnd, { passive: true });
+  }
+
+  function attachOverlayTouch() {
+    if (!overlay || overlayTouchBound) return;
+    overlayTouchBound = true;
+    overlay.addEventListener("touchstart", onOverlayTouchStart, { passive: false });
+    overlay.addEventListener("touchmove", handleTouchMove, { passive: false });
+    overlay.addEventListener("touchend", handleTouchEnd, { passive: true });
+  }
+
+  function detachOverlayTouch() {
+    if (!overlay || !overlayTouchBound) return;
+    overlayTouchBound = false;
+    overlay.removeEventListener("touchstart", onOverlayTouchStart, { passive: false });
+    overlay.removeEventListener("touchmove", handleTouchMove, { passive: false });
+    overlay.removeEventListener("touchend", handleTouchEnd, { passive: true });
+  }
 
   // Escape to close
   document.addEventListener("keydown", function (e) {

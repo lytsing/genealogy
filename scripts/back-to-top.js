@@ -12,7 +12,7 @@
     document.body.appendChild(btn);
 
     btn.addEventListener("click", function () {
-      // Scroll all candidates to top
+      // Scroll all candidates to top (smooth scroll may throw on older WebViews)
       var candidates = [
         document.querySelector(".book-body .body-inner"),
         document.querySelector(".body-inner"),
@@ -20,11 +20,29 @@
         document.querySelector(".page-wrapper")
       ];
       for (var i = 0; i < candidates.length; i++) {
-        if (candidates[i] && candidates[i].scrollTop > 0) {
-          candidates[i].scrollTo({ top: 0, behavior: "smooth" });
+        var el = candidates[i];
+        if (el && el.scrollTop > 0) {
+          try {
+            if (typeof el.scrollTo === "function") {
+              el.scrollTo({ top: 0, behavior: "smooth" });
+            } else {
+              el.scrollTop = 0;
+            }
+          } catch (e) {
+            el.scrollTop = 0;
+          }
         }
       }
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (e) {
+        try {
+          window.scrollTo(0, 0);
+        } catch (e2) {
+          if (document.documentElement) document.documentElement.scrollTop = 0;
+          if (document.body) document.body.scrollTop = 0;
+        }
+      }
     });
 
     return btn;
