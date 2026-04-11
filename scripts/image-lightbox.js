@@ -260,6 +260,19 @@
     if (e.key === "Escape" || e.keyCode === 27) closeLightbox();
   });
 
+  // Reset zoom/pan when device rotates so the image doesn't drift off-screen
+  window.addEventListener("orientationchange", function () {
+    if (!overlay || !overlay.classList.contains("lightbox-visible")) return;
+    var wrap = overlay.querySelector(".lightbox-img-wrap");
+    if (!wrap) return;
+    currentScale = 1;
+    currentX = 0;
+    currentY = 0;
+    wrap.style.transition = "transform 200ms ease";
+    applyTransform(wrap);
+    setTimeout(function () { wrap.style.transition = ""; }, 200);
+  });
+
   // Suppress context menu (long-press on iOS/Android) inside the lightbox
   document.addEventListener("contextmenu", function (e) {
     if (overlay && overlay.classList.contains("lightbox-visible")) {

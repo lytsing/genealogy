@@ -1,3 +1,9 @@
+/* ===== Remove tap highlight on interactive elements ===== */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ===== Prevent Android pull-to-refresh on content scroll ===== */
 .book-body,
 .body-inner {
@@ -369,7 +375,8 @@
 }
 
 .back-to-top:hover,
-.back-to-top:focus {
+.back-to-top:focus,
+.back-to-top:active {
   background: rgba(0, 0, 0, 0.75);
 }
 
@@ -389,7 +396,8 @@
 }
 
 .book.color-theme-2 .back-to-top:hover,
-.book.color-theme-2 .back-to-top:focus {
+.book.color-theme-2 .back-to-top:focus,
+.book.color-theme-2 .back-to-top:active {
   background: rgba(255, 255, 255, 0.35);
 }
 
@@ -432,7 +440,8 @@
   }
 
   .toc-toggle:hover,
-  .toc-toggle:focus {
+  .toc-toggle:focus,
+  .toc-toggle:active {
     background: rgba(0, 0, 0, 0.75);
   }
 
@@ -441,7 +450,18 @@
   }
 
   .book.color-theme-2 .toc-toggle:hover,
-  .book.color-theme-2 .toc-toggle:focus {
+  .book.color-theme-2 .toc-toggle:focus,
+  .book.color-theme-2 .toc-toggle:active {
     background: rgba(255, 255, 255, 0.35);
+  }
+}
+
+/* ===== Respect reduced-motion preference ===== */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-overlay,
+  .lightbox-img-wrap,
+  .back-to-top,
+  .toc-backdrop {
+    transition: none !important;
   }
 }
