@@ -55,6 +55,12 @@ a {
 .markdown-section p {
   margin: 0 0 1.15em;
   text-align: justify;
+  text-indent: 2em;
+}
+
+/* 右对齐落款不缩进 */
+.markdown-section p[style*="text-align:right"] {
+  text-indent: 0;
 }
 
 .markdown-section h1,
@@ -62,6 +68,7 @@ a {
 .markdown-section h3,
 .markdown-section h4 {
   letter-spacing: 0;
+  text-align: center;
 }
 
 .markdown-section h1 {
@@ -85,10 +92,10 @@ a {
 }
 
 .markdown-section .heading-with-share {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: center;
 }
 
 .markdown-section .share-anchor {
@@ -100,10 +107,12 @@ a {
   line-height: 1;
   padding: 6px 9px;
   cursor: pointer;
-  flex-shrink: 0;
+  position: absolute;
+  right: 0;
+  top: 50%;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-1px);
+  transform: translateY(calc(-50% - 1px));
   transition: opacity 160ms ease, transform 160ms ease;
 }
 
@@ -112,7 +121,7 @@ a {
 .markdown-section .heading-with-share.show-share .share-anchor {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(-50%);
 }
 
 .markdown-section .share-anchor--flash {

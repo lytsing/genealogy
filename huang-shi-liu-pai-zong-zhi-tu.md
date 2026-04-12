@@ -72,7 +72,7 @@ description: 百椅墓碑文
 
 ---
 
-<img src=".gitbook/assets/file.drawing (2).svg" alt="黄福军公支系分布示意图" class="gitbook-drawing">
+<img src=".gitbook/assets/file.drawing (2).svg" alt="黄福军公支系分布示意图" class="gitbook-drawing" />
 
 [^1]: 读音 dié
 

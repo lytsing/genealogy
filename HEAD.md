@@ -26,8 +26,6 @@ description: 谱首寄语
 
 前程似锦阳光道，后世炽昌万万年。
 
-
-
 <p style="text-align:right">华冠题诗</p>
 
 <p style="text-align:right">2010 年 5 月 27 日于南宁</p>
