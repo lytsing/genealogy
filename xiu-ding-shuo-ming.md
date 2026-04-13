@@ -1,6 +1,10 @@
 # 修订说明
 
-本电子书是使用 Markdown 格式文档书写，对照纸质公族谱用手机相机识别文字功能拷贝一份过来，并使用 AI 加以文字校对。因为 Microsoft Word 文字排版与网页文字排版有一些差别，电子书更多是要适配不同终端阅读的使用习惯。关于文字排版，参考阮一峰的《[中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)》以及 LCTT 的《[中文排版指北](https://guide.rustt.org/translation-guide/composing.html)》，对字间距、标点符号等做了调整。碑文使用古文言文书写，有通假字与偏僻字，添加了注音注解，段落换行，同时修改了族谱中一些错别字。记录如下：
+
+
+
+本电子书使用 Markdown 格式书写，对照纸质族谱，通过手机相机识别文字功能复制内容，并借助 AI 进行文字校对。由于 Microsoft Word 的文字排版与网页文字排版存在一定差异，电子书更多是为了适配不同终端的阅读习惯。文字排版方面，参考了阮一峰的《[中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)》以及 LCTT 的《[中文排版指北](https://guide.rustt.org/translation-guide/composing.html)》，对字间距、标点符号等做了调整。碑文使用古文言文书写，包含通假字与生僻字，已添加注音注解，调整段落换行，并修改了族谱中的一些错别字。记录如下：
+ 
 ## 勘误表
 
 1. P3，“二00八”，更正为“二〇〇八”；省略号由“······” 更正为 “……”，其他页面也相应同样调整。
