@@ -1,6 +1,6 @@
 # 修订说明
 
-本电子书是对照纸质公族谱，使用手机 iPhone 相机识别文字功能拷贝一份过来，并使用 AI 加以文字校对。因为 Microsoft Word 文字排版与网页文字排版有一些差别，不可能是完全一致。关于文字排版，参考阮一峰的《[中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)》以及 LCTT 的《[中文排版指北](https://guide.rustt.org/translation-guide/composing.html)》，对字间距、标点符号等做了调整。碑文使用古文言文书写，有通假字与偏僻字，添加了注音注解，同时修改了族谱中一些错别字。记录如下：
+本电子书是使用 Markdown 格式文档书写，对照纸质公族谱用手机相机识别文字功能拷贝一份过来，并使用 AI 加以文字校对。因为 Microsoft Word 文字排版与网页文字排版有一些差别，电子书更多是要适配不同终端阅读的使用习惯。关于文字排版，参考阮一峰的《[中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)》以及 LCTT 的《[中文排版指北](https://guide.rustt.org/translation-guide/composing.html)》，对字间距、标点符号等做了调整。碑文使用古文言文书写，有通假字与偏僻字，添加了注音注解，段落换行，同时修改了族谱中一些错别字。记录如下：
 ## 勘误表
 
 1. P3，“二00八”，更正为“二〇〇八”；省略号由“······” 更正为 “……”，其他页面也相应同样调整。
@@ -12,3 +12,22 @@
 7. P27，“利宁” 更正为 “利宇”。
 8. P48，“教百万”更正为“数百万”。
 
+## HonKit 优化
+
+1. 通过 book.json 设置 language: zh-hans， 显示简体中文的界面和插件界面。
+2. 安装页脚插件 honkit-plugin-tbfed-pagefooter
+3. improve mobile UX and performance baseline
+4. optimize Chinese typography for readability
+5. add floating back-to-top button for long pages
+6. add image lightbox with pinch-zoom and use layout override for custom assets
+7. improve mobile UX with safe area, sidebar backdrop, scroll lock, and swipe navigation
+8. add floating TOC toggle button for mobile
+9. fix: prevent Android pull-to-refresh on content scroll
+
+CSS (styles/custom.css):
+
+ - Add text-indent: 2em to .markdown-section p for Chinese paragraph indent
+ - Reset text-indent: 0 for right-aligned attribution <p> elements
+ - Add text-align: center to h1–h4
+ - Refactor .heading-with-share: switch share button to position:absolute
+      so heading text is truly centered
