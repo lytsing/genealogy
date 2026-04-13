@@ -34,19 +34,38 @@ a {
 }
 
 /* ===== Chinese readability ===== */
-.markdown-section {
-  /* 系统字体栈：各平台用本机中文黑体，无额外下载、WebView 友好 */
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
+/* 统一 UI + 正文：主题默认 Helvetica/Arial 对中文会走隐式回退，侧栏与顶栏不如正文清晰 */
+:root {
+  /* 中文标点（含 “” U+201C/U+201D）须由 CJK 无衬线绘制；勿把 system-ui/Segoe 放在雅黑/苹方之前，否则弯引号会像英文引号 */
+  --font-body-sc:
     "PingFang SC",
+    "HarmonyOS Sans SC",
     "Hiragino Sans GB",
     "Microsoft YaHei UI",
     "Microsoft YaHei",
     "Noto Sans CJK SC",
     "Source Han Sans SC",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     "WenQuanYi Micro Hei",
+    "Heiti SC",
+    "STHeiti",
     sans-serif;
+}
+
+body {
+  font-family: var(--font-body-sc);
+}
+
+.book-header,
+.book-summary {
+  font-family: inherit;
+}
+
+.markdown-section {
+  font-family: var(--font-body-sc);
   line-height: 1.9;
   letter-spacing: 0.01em;
   text-rendering: optimizeLegibility;
