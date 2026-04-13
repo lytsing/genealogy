@@ -12,7 +12,7 @@
 7. P27，“利宁” 更正为 “利宇”。
 8. P48，“教百万”更正为“数百万”。
 
-## HonKit 优化
+## HonKit 电子书优化
 
 1. 通过 book.json 设置 language: zh-hans， 显示简体中文的界面和插件界面。
 2. 安装页脚插件 honkit-plugin-tbfed-pagefooter
