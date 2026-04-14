@@ -262,6 +262,26 @@ body {
     min-height: 32px;
     padding: 8px 10px;
   }
+
+  /* Paragraph typography: indent + justify */
+  .markdown-section p {
+    text-indent: 2em;
+    text-align: justify;
+  }
+
+  /* Right-aligned closing lines must not be indented */
+  .markdown-section p[style*="text-align:right"],
+  .markdown-section p[style*="text-align: right"] {
+    text-indent: 0;
+  }
+
+  /* Headings stay centered */
+  .markdown-section h1,
+  .markdown-section h2,
+  .markdown-section h3,
+  .markdown-section h4 {
+    text-align: center;
+  }
 }
 
 @media (max-width: 360px) {
