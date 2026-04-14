@@ -1,6 +1,4 @@
-
 · 谱首寄语 ·
-
 
 # 族谱出版诗四首
 
@@ -21,4 +19,3 @@
 <p style="text-align:right">华冠题诗</p>
 
 <p style="text-align:right">2010 年 5 月 27 日于南宁</p>
-

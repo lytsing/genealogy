@@ -4,51 +4,71 @@
 
 ### 内容修正
 
-- **修复表格空单元格丢失问题** — Honkit 解析器会丢弃末尾的空表格单元格 `| |`，导致数据行比表头少一列，显示出多余空列。将所有空单元格替换为 `| &nbsp; |` 解决此问题。
+- **修复表格空单元格丢失问题** — Honkit 解析器会丢弃末尾的空表格单元格
+  `| |`，导致数据行比表头少一列，显示出多余空列。将所有空单元格替换为
+  `| &nbsp; |` 解决此问题。
 - **诗歌排版** — 使用 `<pre>` 标签保留诗歌原始换行与缩进格式。
 - **Markdown 格式统一** — 统一各章节标题层级、缩进风格，修正行尾双空格换行写法。
 - **错别字校对** — 使用 AI 辅助校对全文错别字。
 
 ### 阅读进度与导航
 
-- **阅读进度条** (`reading-progress.js`) — 页面顶部固定显示阅读进度，随滚动实时更新。
-- **返回顶部按钮** (`back-to-top.js`) — 滚动超过一屏后显示浮动按钮，点击平滑回到顶部。移动端位于底部导航栏上方，避免遮挡。
-- **滚动位置记忆** (`scroll-memory.js`) — 离开页面再返回时，自动恢复上次阅读位置。
-- **左右滑动翻页** (`swipe-navigation.js`) — 支持手势左右滑动切换章节，滑动距离超过阈值才触发，避免误操作。
+- **阅读进度条** (`reading-progress.js`)
+  — 页面顶部固定显示阅读进度，随滚动实时更新。
+- **返回顶部按钮** (`back-to-top.js`)
+  — 滚动超过一屏后显示浮动按钮，点击平滑回到顶部。移动端位于底部导航栏上方，避免遮挡。
+- **滚动位置记忆** (`scroll-memory.js`)
+  — 离开页面再返回时，自动恢复上次阅读位置。
+- **左右滑动翻页** (`swipe-navigation.js`)
+  — 支持手势左右滑动切换章节，滑动距离超过阈值才触发，避免误操作。
 
 ### 目录与侧栏
 
-- **移动端 TOC 浮动按钮** (`toc-toggle.js`) — 小屏幕隐藏侧栏时，提供浮动按钮一键展开目录；点击遮罩或按钮再次关闭，展开时锁定背景滚动。
+- **移动端 TOC 浮动按钮** (`toc-toggle.js`)
+  — 小屏幕隐藏侧栏时，提供浮动按钮一键展开目录；点击遮罩或按钮再次关闭，展开时锁定背景滚动。
 
 ### 图片
 
-- **图片灯箱** (`image-lightbox.js`) — 点击族谱图片全屏放大，支持双指捏合缩放、双击还原、键盘 Esc 关闭，iOS/Android 长按菜单已屏蔽。
-- **图片懒加载** (`image-performance.js`) — 使用 `IntersectionObserver` 延迟加载视口外图片，减少首屏流量。
+- **图片灯箱** (`image-lightbox.js`)
+  — 点击族谱图片全屏放大，支持双指捏合缩放、双击还原、键盘 Esc 关闭，iOS/Android 长按菜单已屏蔽。
+- **图片懒加载** (`image-performance.js`) — 使用 `IntersectionObserver`
+  延迟加载视口外图片，减少首屏流量。
 - **图片防溢出** (`custom.css`) — `max-width: 100%` 确保图片不超出内容区宽度。
 
 ### 表格
 
-- **横向滚动提示** (`table-scroll-hints.js`) — 宽表格在小屏幕上可横向滚动；左右边缘用阴影动态提示还有内容未显示，滚动到头时阴影消失。
+- **横向滚动提示** (`table-scroll-hints.js`)
+  — 宽表格在小屏幕上可横向滚动；左右边缘用阴影动态提示还有内容未显示，滚动到头时阴影消失。
 
 ### 标题分享
 
-- **标题锚点分享** (`share-links.js`) — 鼠标悬停标题时出现"分享"按钮，点击将带锚点的 URL 复制到剪贴板，并有短暂高亮反馈。
+- **标题锚点分享** (`share-links.js`)
+  — 鼠标悬停标题时出现"分享"按钮，点击将带锚点的 URL 复制到剪贴板，并有短暂高亮反馈。
 
 ### 中文字体与排版
 
-- **CJK 优先字体栈** (`custom.css`) — 将 PingFang SC、HarmonyOS Sans SC、微软雅黑等 CJK 字体置于 `system-ui` 之前，确保中文弯引号 `""` 由中文字体渲染，避免显示为西文引号样式。
-- **正文可读性** — 行高 1.9、字间距 0.01em、两端对齐、段首缩进 2em；标题居中、右对齐落款不缩进。
+- **CJK 优先字体栈** (`custom.css`) — 将 PingFang SC、HarmonyOS Sans
+  SC、微软雅黑等 CJK 字体置于 `system-ui` 之前，确保中文弯引号 `""`
+  由中文字体渲染，避免显示为西文引号样式。
+- **正文可读性**
+  — 行高 1.9、字间距 0.01em、两端对齐、段首缩进 2em；标题居中、右对齐落款不缩进。
 - **移动端字号响应** — 600px 以下正文 16px，360px 以下 15px；标题字号同步缩小。
 
 ### 移动端细节
 
-- **安全区适配** — `viewport-fit=cover` + `safe-area-inset-*`，适配 iPhone 刘海屏与底部 Home 条。
-- **触摸体验** — 移除 `-webkit-tap-highlight-color`，防止 Android 下拉刷新干扰内容滚动（`overscroll-behavior-y: contain`）。
-- **减少动效** — `@media (prefers-reduced-motion: reduce)` 关闭所有过渡动画，照顾前庭敏感用户。
+- **安全区适配** — `viewport-fit=cover` +
+  `safe-area-inset-*`，适配 iPhone 刘海屏与底部 Home 条。
+- **触摸体验** — 移除
+  `-webkit-tap-highlight-color`，防止 Android 下拉刷新干扰内容滚动（`overscroll-behavior-y: contain`）。
+- **减少动效** — `@media (prefers-reduced-motion: reduce)`
+  关闭所有过渡动画，照顾前庭敏感用户。
 - **导航箭头优化** — 移动端导航箭头字号 36px、最小高度 50px，增大点击区域。
 
 ### 基础设施
 
-- **自定义布局加载** (`_layouts/website/page.html`) — 通过 Honkit 布局覆盖注入自定义 CSS 与 JS，`serve` 和 `build` 均生效，无需构建后手动注入。
+- **自定义布局加载** (`_layouts/website/page.html`)
+  — 通过 Honkit 布局覆盖注入自定义 CSS 与 JS，`serve` 和 `build`
+  均生效，无需构建后手动注入。
 - **页脚插件** — `honkit-plugin-tbfed-pagefooter` 显示版权信息与文章修订时间。
-- **数学公式** — `honkit-plugin-katex` 支持 KaTeX 公式渲染（备用，族谱内容暂未使用）。
+- **数学公式** — `honkit-plugin-katex`
+  支持 KaTeX 公式渲染（备用，族谱内容暂未使用）。
