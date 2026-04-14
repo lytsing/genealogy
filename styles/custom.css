@@ -521,3 +521,11 @@ body {
     transition: none !important;
   }
 }
+
+/* ===== Hide web-side floating buttons inside the native app WebView ===== */
+/* The app injects .in-rn-webview on <html>; native RN buttons replace these. */
+.in-rn-webview .back-to-top,
+.in-rn-webview .toc-toggle,
+.in-rn-webview .toc-backdrop {
+  display: none !important;
+}
