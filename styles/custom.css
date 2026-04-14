@@ -27,11 +27,8 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== Prevent Android pull-to-refresh on content scroll ===== */
-.book-body,
-.body-inner {
-  overscroll-behavior-y: contain;
-}
+/* overscroll-behavior-y:contain was here to prevent Android pull-to-refresh,
+   but it breaks scrolling in HonKit's nested scroll containers. Removed. */
 
 /* ===== Chinese readability ===== */
 /* 统一 UI + 正文：主题默认 Helvetica/Arial 对中文会走隐式回退，侧栏与顶栏不如正文清晰 */
