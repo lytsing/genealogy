@@ -473,67 +473,11 @@ body {
   background: rgba(255, 255, 255, 0.35);
 }
 
-/* ===== TOC Toggle (mobile) ===== */
-.toc-toggle {
-  display: none;
-}
-
-.toc-backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 149;
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.toc-backdrop.toc-backdrop-visible {
-  display: block;
-}
-
-@media (max-width: 600px) {
-  .toc-toggle {
-    display: block;
-    position: fixed;
-    bottom: 72px;
-    left: 14px;
-    z-index: 900;
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.55);
-    color: #fff;
-    font-size: 20px;
-    line-height: 40px;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: background 160ms ease;
-  }
-
-  .toc-toggle:hover,
-  .toc-toggle:focus,
-  .toc-toggle:active {
-    background: rgba(0, 0, 0, 0.75);
-  }
-
-  .book.color-theme-2 .toc-toggle {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .book.color-theme-2 .toc-toggle:hover,
-  .book.color-theme-2 .toc-toggle:focus,
-  .book.color-theme-2 .toc-toggle:active {
-    background: rgba(255, 255, 255, 0.35);
-  }
-}
-
 /* ===== Respect reduced-motion preference ===== */
 @media (prefers-reduced-motion: reduce) {
   .lightbox-overlay,
   .lightbox-img-wrap,
   .back-to-top,
-  .toc-backdrop,
   .reading-progress {
     transition: none !important;
   }
@@ -541,8 +485,6 @@ body {
 
 /* ===== Hide web-side floating buttons inside the native app WebView ===== */
 /* The app injects .in-rn-webview on <html>; native RN buttons replace these. */
-.in-rn-webview .back-to-top,
-.in-rn-webview .toc-toggle,
-.in-rn-webview .toc-backdrop {
+.in-rn-webview .back-to-top {
   display: none !important;
 }
