@@ -1,19 +1,20 @@
 {% extends template.self %}
+{% set asset_v = ((gitbook.time ~ "") | d("dev", true) | replace(" ", "") | replace("-", "") | replace(":", "") | replace("T", "") | replace(".", "") | replace("(", "") | replace(")", "") | replace("+", "") ) %}
 
 {% block head %}
     {{ super() }}
     <script>!function(){var m=document.querySelector('meta[name="viewport"]');m&&m.content.indexOf('viewport-fit')<0&&(m.content+=',viewport-fit=cover')}()</script>
-    <link rel="stylesheet" href="{{ "styles/custom.css"|resolveFile }}">
+    <link rel="stylesheet" href="{{ "styles/custom.css"|resolveFile }}?v={{ asset_v }}">
 {% endblock %}
 
 {% block javascript %}
     {{ super() }}
-    <script src="{{ "scripts/table-scroll-hints.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/share-links.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/image-performance.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/image-lightbox.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/back-to-top.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/swipe-navigation.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/scroll-memory.js"|resolveFile }}"></script>
-    <script src="{{ "scripts/reading-progress.js"|resolveFile }}"></script>
+    <script src="{{ "scripts/table-scroll-hints.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/share-links.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/image-performance.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/image-lightbox.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/back-to-top.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/swipe-navigation.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/scroll-memory.js"|resolveFile }}?v={{ asset_v }}"></script>
+    <script src="{{ "scripts/reading-progress.js"|resolveFile }}?v={{ asset_v }}"></script>
 {% endblock %}
