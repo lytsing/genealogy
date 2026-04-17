@@ -20,8 +20,9 @@
 
 <p style="text-align:right">道光十年岁次庚寅年三月十五日吉日立</p>
 
+
 {% hint style='info' %}
-_(注：原文繁体字，无标点)_
+原文繁体字，无标点
 {% endhint %}
 
 白话文翻译(_补充内容_)：
@@ -68,6 +69,7 @@ _(注：原文繁体字，无标点)_
 
 ---
 
-<img src=".gitbook/assets/file.drawing (2).svg" alt="黄福军公支系分布示意图" class="gitbook-drawing" />
-
+{% hint style='tip' %}
 [^1]: 瓞 dié
+{% endhint %}
+
