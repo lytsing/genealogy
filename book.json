@@ -16,6 +16,21 @@
         "fontSize": 14,
         "show_power": false
     }
+  },
+  "pdf": {
+    "pageNumbers": true,
+    "fontSize": 14,
+    "fontFamily": "Noto Sans SC",
+    "Paper": "a4",
+    "margin": {
+      "right": 62,
+      "left": 62,
+      "top": 56,
+      "bottom": 56
+    }
+  },
+  "styles": {
+      "pdf": "styles/pdf.css"
   }
 }
 

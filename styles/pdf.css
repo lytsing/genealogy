@@ -1,0 +1,213 @@
+/* 中文字体优化 */
+body {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "SimSun", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: #333;
+  letter-spacing: 0.02em;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+/* 页面页脚装饰 */
+@page {
+  @bottom-center {
+    content: counter(page);
+    font-size: 12px;
+    color: #999;
+  }
+}
+
+/* 每个段落首行缩进 2 个中文字符 */
+p {
+  margin: 0.8em 0 0.8em 0;
+  line-height: 1.9;
+  text-align: justify;
+  orphans: 2;
+  widows: 2;
+}
+
+p:not(:first-child)::before {
+  content: '　　';
+  letter-spacing: 0;
+}
+
+/* 标题样式 */
+h1 {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+  page-break-before: always;
+  page-break-after: avoid;
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  color: #222;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+  page-break-after: avoid;
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  color: #333;
+}
+
+h3 {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  page-break-after: avoid;
+  text-align: center;
+  line-height: 1.4;
+  color: #444;
+}
+
+/* 引用块美化 */
+blockquote {
+  margin: 1em 0;
+  padding: 0.8em 0 0.8em 1em;
+  border-left: 4px solid #d0d0d0;
+  background-color: #f9f9f9;
+  line-height: 1.8;
+  page-break-inside: avoid;
+}
+
+blockquote p {
+  margin: 0.4em 0;
+  padding: 0;
+}
+
+/* 表格优化 */
+table {
+  page-break-inside: avoid;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.95em;
+}
+
+table td,
+table th {
+  padding: 10px 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+table th {
+  background-color: #e8e8e8;
+  font-weight: 600;
+  color: #222;
+}
+
+/* 表格奇偶行斑马纹 */
+table tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #fff;
+}
+
+/* 代码块优化 */
+pre {
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 4px;
+  border-left: 3px solid #999;
+  overflow-x: auto;
+  page-break-inside: avoid;
+  font-size: 0.9em;
+  line-height: 1.6;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
+}
+
+code {
+  background: #f5f5f5;
+  padding: 2px 6px;
+  font-size: 0.9em;
+  font-family: "Monaco", "Menlo", "Courier New", monospace;
+  color: #d63384;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: #333;
+}
+
+/* 图片优化 */
+img {
+  max-width: 100%;
+  height: auto;
+  page-break-inside: avoid;
+  display: block;
+  margin: 1em auto;
+}
+
+/* 列表样式 */
+ul, ol {
+  margin: 0.8em 0;
+  padding-left: 2em;
+  line-height: 1.8;
+}
+
+li {
+  margin: 0.4em 0;
+  line-height: 1.8;
+  text-align: justify;
+  orphans: 2;
+  widows: 2;
+}
+
+/* 分割线 */
+hr {
+  margin: 1.5em 0;
+  border: none;
+  border-top: 1px solid #ddd;
+  page-break-after: avoid;
+}
+
+/* 强调文本 */
+strong {
+  font-weight: 600;
+  color: #222;
+}
+
+em {
+  font-style: italic;
+  color: #555;
+}
+
+/* 链接样式 */
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #666699;
+}
+
+/* 其他文本元素 */
+mark {
+  background-color: #fff3cd;
+  padding: 2px 4px;
+}
+
+del {
+  color: #999;
+  text-decoration: line-through;
+}
+
+ins {
+  background-color: #e8f5e9;
+  text-decoration: none;
+}
