@@ -4,6 +4,7 @@
         "serve": "honkit serve"
     },
     "devDependencies": {
+        "gitbook-plugin-hints": "^1.0.2",
         "honkit": "^6.1.7",
         "honkit-plugin-tbfed-pagefooter": "^0.0.8"
     },

@@ -3,7 +3,7 @@
   "description": "广西平果市旧城",
   "author": "黄利庆",
   "language": "zh-hans",
-  "plugins": ["katex", "tbfed-pagefooter"],
+  "plugins": ["katex", "tbfed-pagefooter", "hints"],
   "pluginsConfig": {
     "katex": {
       "css": "https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"

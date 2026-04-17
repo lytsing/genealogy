@@ -20,6 +20,7 @@
 
 （注：原文繁体字无标点，此标点正确与否，共商榷）
 
+{% hint style='tip' %}
 **【注释】**
 
 - 甞： cháng 古同“尝”。
@@ -35,6 +36,7 @@
 - 筮： shì 古代用蓍草占卦：“龟为卜，策为筮”。筮仕（古人将出外做官，先占卦问吉凶。后称初次做官为“筮仕”）。
 - 俟：sì 〔俟次〕依次。 等待：俟机进攻。
 - 厯：lì 古同“歴” 歴 lì 古同“历”。
+{% endhint %}
 
 ## 补充内容
 
@@ -50,9 +52,9 @@
 
 ## 图片
 
-（电子书离线生成：原图链接）[wq1.jpg](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)
+（梅泉胜境：原图链接）[wq1.jpg](https://blog.lytsing.org/wp-content/uploads/2011/05/wq1.jpg)
 
-（电子书离线生成：原图链接）[wcg21.jpg](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)
+（文昌阁：原图链接）[wcg21.jpg](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg21.jpg)
 
-（电子书离线生成：原图链接）[文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
+（文昌阁、水月宫（记忆画）：原图链接）[文昌阁、水月宫（记忆画）](https://blog.lytsing.org/wp-content/uploads/2011/05/wcg.jpg)
 

@@ -20,9 +20,9 @@
 
 <p style="text-align:right">道光十年岁次庚寅年三月十五日吉日立</p>
 
+{% hint style='info' %}
 _(注：原文繁体字，无标点)_
-
----
+{% endhint %}
 
 白话文翻译(_补充内容_)：
 
