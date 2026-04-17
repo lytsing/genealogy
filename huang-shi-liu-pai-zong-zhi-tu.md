@@ -70,4 +70,4 @@ _(注：原文繁体字，无标点)_
 
 <img src=".gitbook/assets/file.drawing (2).svg" alt="黄福军公支系分布示意图" class="gitbook-drawing" />
 
-[^1]: 读音 dié
+[^1]: 瓞 dié
