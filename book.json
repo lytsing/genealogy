@@ -19,7 +19,7 @@
   },
   "pdf": {
     "pageNumbers": true,
-    "fontSize": 14,
+    "fontSize": 12,
     "fontFamily": "Noto Sans SC",
     "Paper": "a4",
     "margin": {
