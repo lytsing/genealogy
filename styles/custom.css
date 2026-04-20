@@ -499,3 +499,13 @@ body {
     max-width: 800px;
   }
 }
+
+/* ===== OpenType CJK punctuation & link underline ===== */
+.markdown-section {
+  font-feature-settings: "chws" 1, "kern" 1;
+}
+
+.markdown-section a,
+.book.color-theme-2 .markdown-section a {
+  text-underline-offset: 0.2em;
+}
