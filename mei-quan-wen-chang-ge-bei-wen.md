@@ -16,9 +16,9 @@
 
 居山陬[^10]而振文风，请自隗始[^11]，若筮[^12]虎变，占鹤鸣，翻然为图南鹏以光宠斯阁者，余将拭目以俟[^13]后之人！
 
-<p style=“text-align:right”>黄峻冠拜撰</p>
+<p style="text-align:right">黄峻冠拜撰</p>
 
-<p style=“text-align:right”>咸丰四年岁次甲寅孟春月吉日立</p>
+<p style="text-align:right">咸丰四年岁次甲寅孟春月吉日立</p>
 
 _注：原文繁体字无标点，此标点正确与否，共商榷_
 
