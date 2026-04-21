@@ -66,6 +66,7 @@ body {
   line-height: 1.9;
   letter-spacing: 0.01em;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "chws" 1, "kern" 1;
 }
 
 .markdown-section p {
@@ -490,7 +491,7 @@ body {
 }
 
 /* ===== Desktop typography ===== */
-@media (min-width: 601px) {
+@media (min-width: 600.02px) {
   .markdown-section {
     font-size: 17px;
   }
@@ -501,10 +502,6 @@ body {
 }
 
 /* ===== OpenType CJK punctuation & link underline ===== */
-.markdown-section {
-  font-feature-settings: "chws" 1, "kern" 1;
-}
-
 .markdown-section a,
 .book.color-theme-2 .markdown-section a {
   text-underline-offset: 0.2em;
