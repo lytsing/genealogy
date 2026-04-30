@@ -9,6 +9,7 @@
         "honkit-plugin-tbfed-pagefooter": "^0.0.8"
     },
     "dependencies": {
+        "gitbook-plugin-search-pro": "^2.0.2",
         "honkit-plugin-katex": "^1.1.7"
     }
 }

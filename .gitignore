@@ -192,3 +192,9 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,gitbook
+
+# Backup files
+*.bak
+
+# Personal notes unrelated to the genealogy book
+Clash-Verge.md
