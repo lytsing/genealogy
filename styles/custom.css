@@ -67,6 +67,17 @@ body {
   letter-spacing: 0.01em;
   text-rendering: optimizeLegibility;
   font-feature-settings: "chws" 1, "kern" 1;
+  /* 简体形态优先（避免日文/繁体异体） */
+  font-variant-east-asian: simplified;
+  /* 行末标点悬挂到行外，左右行末更整齐 */
+  hanging-punctuation: allow-end last;
+}
+
+/* CSS Text Module 4：自动收紧全角标点的两侧空隙 */
+@supports (text-spacing-trim: trim-start) {
+  .markdown-section {
+    text-spacing-trim: trim-start;
+  }
 }
 
 .markdown-section p {
@@ -209,6 +220,12 @@ body {
 .markdown-section table td {
   white-space: normal;
   word-break: break-word;
+}
+
+/* 数字列等宽对齐：历代宗贤录 / 捐资名单等表格 */
+.markdown-section table th,
+.markdown-section table td {
+  font-variant-numeric: tabular-nums;
 }
 
 .markdown-section blockquote {
