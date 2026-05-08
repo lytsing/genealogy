@@ -200,6 +200,31 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
   text-indent: 0 !important;     /* override custom.css's 2em indent */
 }
 
+/* Hint blocks ({% hint style='tip' %} …) wrap each footnote-style list item
+   in a <blockquote>. The card-style override above would turn every
+   footnote into a heavy gray card with a dark left bar — far stronger
+   than the web view, which only shows a thin gray indent line. Reset
+   them inside .hints-container to a light, web-equivalent style. */
+.markdown-section .hints-container blockquote,
+.markdown-section .hints-alert blockquote {
+  background: transparent !important;
+  border: 0 !important;
+  border-left: 3px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 0 !important;
+  padding: 0 0 0 0.6em !important;
+  margin: 0 !important;
+  page-break-inside: auto;
+  break-inside: auto;
+}
+.markdown-section .hints-container ul,
+.markdown-section .hints-container ol {
+  margin: 0 !important;
+  padding-left: 1.4em;
+}
+.markdown-section .hints-container li {
+  margin: 0.25em 0 !important;
+}
+
 /* === Code blocks: undo custom.css's web-only horizontal-scroll behavior === */
 /* In print, "overflow-x:auto" silently clips ASCII-art charts (e.g. the wide
    班序 row in 上始祖分枝图). Restore visible overflow + match Calibre's actual
