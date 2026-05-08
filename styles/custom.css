@@ -96,12 +96,19 @@ body {
 .markdown-section h3,
 .markdown-section h4 {
   letter-spacing: 0;
-  text-align: center;
 }
 
+/* 仅篇章标题居中，二级及以下左对齐以强化层级感 */
 .markdown-section h1 {
+  text-align: center;
   margin-top: 1.35em;
   margin-bottom: 0.7em;
+}
+
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4 {
+  text-align: left;
 }
 
 .markdown-section h2 {
@@ -123,6 +130,11 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  /* 默认左起，与 h2/h3/h4 的 text-align 保持一致 */
+  justify-content: flex-start;
+}
+
+.markdown-section h1.heading-with-share {
   justify-content: center;
 }
 
@@ -290,12 +302,15 @@ body {
     text-indent: 0;
   }
 
-  /* Headings stay centered */
-  .markdown-section h1,
+  /* 与桌面端保持一致：H1 居中，H2/H3/H4 左对齐 */
+  .markdown-section h1 {
+    text-align: center;
+  }
+
   .markdown-section h2,
   .markdown-section h3,
   .markdown-section h4 {
-    text-align: center;
+    text-align: left;
   }
 }
 
