@@ -50,8 +50,21 @@ Calibre's `ebook-convert`, which on Calibre 9.x produces a PDF whose outline
      `<table>` layout (custom.css's web-scroll behavior would clip wide
      tables in print), and force `page-break-before: always` between
      chapters.
-6. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
+6. **Cover**: replaces the rendered `README.md` (a small H1 + cover image)
+   with a print-friendly cover layout: enlarged scan + subtitle + electronic
+   edition attribution. The H1 is dropped because the cover scan already
+   contains the title / 主编 / 编写组 / 印刷年月.
+7. **Inlines external image links** during HTML extraction: any
+   `<a href="assets/images/page-XX.jpg">` is replaced with a `<figure>`
+   containing the actual image + caption, so the paper genealogy scans
+   show up inline in the PDF instead of as dead links.
+8. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
    Chromium auto-generates a clickable PDF outline from `<h1>`/`<h2>`/`<h3>`.
+9. Re-opens the resulting PDF with **`pdf-lib`** to write proper UTF-8
+   metadata (Title / Author / Subject / Keywords / Creator / Producer)
+   sourced from `book.json`. Chromium otherwise emits a garbled Title and
+   leaves Author/Subject/Keywords blank. The outline tree and tagged-PDF
+   structure are preserved across this re-save.
 
 `styles/pdf.css` is intentionally NOT loaded by this flow — its
 `@page { @bottom-center { content: counter(page) }}` would draw a second

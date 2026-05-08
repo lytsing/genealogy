@@ -8,6 +8,7 @@
         "gitbook-plugin-hints": "^1.0.2",
         "honkit": "^6.1.7",
         "honkit-plugin-tbfed-pagefooter": "^0.0.8",
+        "pdf-lib": "^1.17.1",
         "puppeteer": "^24.43.0"
     },
     "dependencies": {

@@ -23,6 +23,18 @@ const ROOT = path.resolve(__dirname, "..");
 const BOOK_DIR = path.join(ROOT, "_book");
 const OUT_PDF = path.resolve(process.argv[2] || path.join(ROOT, "book.pdf"));
 
+// PDF metadata, sourced from book.json so it stays in sync with the web build.
+function readBookMeta() {
+  const bj = JSON.parse(
+    fs.readFileSync(path.join(ROOT, "book.json"), "utf8")
+  );
+  return {
+    title: bj.title || "黄福军公族谱",
+    author: bj.author || "黄利庆",
+    description: bj.description || "",
+  };
+}
+
 function ensureBuild() {
   if (!fs.existsSync(path.join(BOOK_DIR, "index.html"))) {
     console.log("[pdf] _book/ missing — running honkit build first…");
@@ -75,10 +87,85 @@ function extractSection(html) {
     ""
   );
 
+  // Strip empty <p></p> tags that HonKit emits around its plugin output
+  // (tbfed-pagefooter, hints) — they leave 1.85em of vertical air per
+  // empty paragraph and can push an otherwise-fitting block onto a new
+  // page.
+  body = body.replace(/<p>\s*<\/p>/g, "");
+
+  // Drop the trailing `<hr>` that markdown files often end with. Each
+  // chapter article already has `page-break-before: always`, so a final
+  // `<hr>` is redundant and tends to get stranded as the only content
+  // of an otherwise blank page when the previous block fills the page
+  // exactly. HonKit renders `---` as `<hr></hr>` (a stray closing tag),
+  // so the pattern accepts both forms; trailing whitespace and any
+  // residual empty <p> already normalized above.
+  body = body.replace(
+    /(?:\s*<hr\s*\/?>(?:\s*<\/hr>)?\s*)+(?=\s*<\/section>\s*$)/,
+    ""
+  );
+  // `<hr>` immediately before a heading is also visually redundant
+  // (the heading already starts a new visual block).
+  body = body.replace(/<hr\s*\/?>(?:\s*<\/hr>)?\s*(?=<h[1-6])/g, "");
+
+  // Inline external image links (e.g. asset-image lists for the paper
+  // genealogy scans). In the web view these open the JPG in a new tab;
+  // in PDF they're dead links because the relative path doesn't resolve
+  // in the reader. Convert each list of such links into a stack of
+  // <figure> blocks so the actual scan is embedded in the PDF.
+  // In the web view these open the JPG in a new tab; in PDF they're dead links because
+  // the relative path doesn't resolve in the reader. Convert each list of such links
+  // into a stack of <figure> blocks so the actual scan is embedded in the PDF.
+  body = body.replace(
+    /<ul>\s*((?:<li>\s*<a\s+href="(?:assets\/images\/[^"]+)"[^>]*>[^<]+<\/a>\s*<\/li>\s*)+)<\/ul>/g,
+    (_, lis) => {
+      const figs = [];
+      const liRe =
+        /<li>\s*<a\s+href="(assets\/images\/[^"]+)"[^>]*>([^<]+)<\/a>\s*<\/li>/g;
+      let m;
+      while ((m = liRe.exec(lis))) {
+        const [, src, label] = m;
+        const caption = label.trim();
+        figs.push(
+          `<figure class="pdf-asset-image"><img src="${src}" alt="${caption}"><figcaption>${caption}</figcaption></figure>`
+        );
+      }
+      return figs.join("\n");
+    }
+  );
+
   return body;
 }
 
-function buildCombinedHtml(items) {
+// Replace the cover chapter (rendered from README.md) with a print-friendly
+// cover layout. The original README has only `# 黄福军公族谱` + `![封面]`,
+// which prints as a small H1 + image with the page number "1 / N" in the
+// footer — not very book-like. Here we drop the H1 (the cover image already
+// contains the title + 主编 + 编写组 + 年月), give the image room to breathe,
+// and add an electronic-edition attribution under it.
+function buildCoverArticle(meta) {
+  return `<article class="pdf-chapter pdf-cover">
+  <img src="cover.jpg" alt="${escapeAttr(meta.title)} 封面" class="cover-image">
+  <div class="cover-meta">
+    <p class="cover-subtitle">${escapeHtml(meta.description || "")}</p>
+    <p>电子版整理｜${escapeHtml(meta.author)}</p>
+    <p>${new Date().getFullYear()} 年修订</p>
+  </div>
+</article>`;
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/[&"<>]/g, (c) =>
+    ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" }[c])
+  );
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])
+  );
+}
+
+function buildCombinedHtml(items, meta) {
   const customCss = fs.readFileSync(
     path.join(ROOT, "styles/custom.css"),
     "utf8"
@@ -90,20 +177,25 @@ function buildCombinedHtml(items) {
   // typography this flow needs.
 
   const sections = [];
-  for (const it of items) {
+  items.forEach((it, idx) => {
+    // Replace the README/index page with a custom cover layout.
+    if (idx === 0 && it.html === "index.html") {
+      sections.push(buildCoverArticle(meta));
+      return;
+    }
     const file = path.join(BOOK_DIR, it.html);
     if (!fs.existsSync(file)) {
       console.warn("[pdf] missing:", file);
-      continue;
+      return;
     }
     const html = fs.readFileSync(file, "utf8");
     const sec = extractSection(html);
     if (!sec) {
       console.warn("[pdf] could not extract markdown-section from:", it.html);
-      continue;
+      return;
     }
     sections.push(`<article class="pdf-chapter">${sec}</article>`);
-  }
+  });
 
   // Trailing slash so relative URLs (e.g. images/foo.jpg, gitbook/...) resolve.
   const baseHref = "file://" + BOOK_DIR + "/";
@@ -113,7 +205,7 @@ function buildCombinedHtml(items) {
 <head>
 <meta charset="UTF-8">
 <base href="${baseHref}">
-<title>黄福军公族谱</title>
+<title>${escapeHtml(meta.title)}</title>
 
 <link rel="stylesheet" href="gitbook/honkit-plugin-katex/katex.min.css">
 
@@ -149,19 +241,43 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
 .pdf-chapter { page-break-before: always; break-before: page; }
 .pdf-chapter:first-child { page-break-before: auto; break-before: auto; }
 
-/* Cover page: contain title + image on a single A4 page.
-   A4 content area ≈ 261mm tall; reserve room for H1 + page footer. */
-.pdf-chapter:first-child {
+/* === Cover page === */
+/* Contains the cover scan + electronic-edition attribution. The cover image
+   itself already shows the title, 主编, 编写组 and original print year, so
+   we deliberately don't re-render those as text. */
+.pdf-cover {
   page-break-inside: avoid;
   break-inside: avoid;
+  page-break-after: always;
+  break-after: page;
+  text-align: center;
+  padding-top: 14mm;
 }
-.pdf-chapter:first-child .markdown-section img {
+.pdf-cover .cover-image {
   display: block;
-  max-width: 100%;
-  max-height: 200mm;
+  margin: 0 auto;
+  max-width: 78%;
+  max-height: 195mm;
   width: auto;
   height: auto;
-  margin: 0 auto;
+  border: 1px solid #d8d8d8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.pdf-cover .cover-meta {
+  margin: 10mm auto 0;
+  color: #555;
+  font-size: 11pt;
+  line-height: 1.7;
+}
+.pdf-cover .cover-meta p {
+  margin: 0.25em 0 !important;
+  text-indent: 0 !important;
+}
+.pdf-cover .cover-meta .cover-subtitle {
+  font-size: 13pt;
+  color: #333;
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5em !important;
 }
 
 /* Avoid orphan headings at the bottom of a page */
@@ -170,10 +286,63 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
   break-after: avoid-page;
 }
 
-/* Avoid lone-line widows/orphans across page breaks */
+/* Avoid lone-line widows/orphans across page breaks. widows: 3 means a
+   chapter ending with 1-2 trailing lines pulls them onto the next page
+   together, instead of stranding 2 lines at the top of an otherwise blank
+   page. */
 .markdown-section p, .markdown-section li {
-  orphans: 2;
-  widows: 2;
+  orphans: 3;
+  widows: 3;
+}
+
+/* Keep hint blocks on a single page if they fit. Without this, a tall
+   {% hint %} that crosses a page boundary leaves a green sliver on one
+   page and an empty page after it. */
+.markdown-section .alert,
+.markdown-section .hints-alert {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Pull a chapter's last 1-3 trailing paragraphs back onto the previous
+   page if they would otherwise be stranded (closing signature lines,
+   short summaries, …). Without this, a 3-4 line tail can occupy an
+   otherwise empty page on its own — see preface ending and 修订说明. */
+.markdown-section > p:last-child,
+.markdown-section > p:nth-last-child(2),
+.markdown-section > p:nth-last-child(3) {
+  page-break-before: avoid;
+  break-before: avoid-page;
+}
+
+/* The <hr> separator should never be the first element of a new page
+   (it looks like a stray rule at the top). Keep it with the preceding
+   paragraph instead. */
+.markdown-section hr {
+  page-break-before: avoid;
+  break-before: avoid-page;
+}
+
+/* === Embedded asset images (生成自原 <a href="assets/images/page-XX.jpg">) === */
+.markdown-section figure.pdf-asset-image {
+  margin: 10mm auto;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  text-align: center;
+}
+.markdown-section figure.pdf-asset-image img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 230mm;
+  border: 1px solid #d8d8d8;
+}
+.markdown-section figure.pdf-asset-image figcaption {
+  margin-top: 6px;
+  color: #666;
+  font-size: 0.9em;
+  text-align: center;
+  font-style: italic;
 }
 
 /* Headings: tighter line-height than body so multi-line titles don't gap */
@@ -316,6 +485,35 @@ ${sections.join("\n")}
 </html>`;
 }
 
+async function writeMetadata(pdfPath, meta) {
+  // Chromium writes a garbled UTF-8 Title and an empty Author/Subject/Keywords.
+  // Re-open the PDF with pdf-lib to set proper Chinese metadata so file
+  // managers, PDF readers and search indexers display the book correctly.
+  // pdf-lib preserves the existing /Outlines tree and tagged-PDF structure.
+  let PDFDocument;
+  try {
+    ({ PDFDocument } = require("pdf-lib"));
+  } catch (_) {
+    console.warn(
+      "[pdf] pdf-lib not installed — skipping metadata. Run: npm install --save-dev pdf-lib"
+    );
+    return;
+  }
+  const bytes = fs.readFileSync(pdfPath);
+  const doc = await PDFDocument.load(bytes, { updateMetadata: false });
+  doc.setTitle(meta.title);
+  doc.setAuthor(meta.author);
+  if (meta.description) doc.setSubject(meta.description);
+  doc.setKeywords(["族谱", "黄福军", "黄氏", "平果", "旧城", "家谱"]);
+  doc.setCreator("HonKit + scripts/build-pdf.js");
+  doc.setProducer("Chromium / pdf-lib");
+  const now = new Date();
+  doc.setCreationDate(now);
+  doc.setModificationDate(now);
+  const out = await doc.save({ useObjectStreams: false });
+  fs.writeFileSync(pdfPath, out);
+}
+
 (async () => {
   ensureBuild();
   const items = readSummary();
@@ -325,7 +523,8 @@ ${sections.join("\n")}
   }
   console.log(`[pdf] found ${items.length} chapters`);
 
-  const combined = buildCombinedHtml(items);
+  const meta = readBookMeta();
+  const combined = buildCombinedHtml(items, meta);
   const tmpHtml = path.join(BOOK_DIR, "_print-all.html");
   fs.writeFileSync(tmpHtml, combined, "utf8");
 
@@ -405,13 +604,14 @@ ${sections.join("\n")}
       tagged: true,
       outline: true,
     });
-    console.log("[pdf] wrote", OUT_PDF);
   } finally {
     await browser.close();
     try {
       fs.unlinkSync(tmpHtml);
     } catch (_) {}
   }
+  await writeMetadata(OUT_PDF, meta);
+  console.log("[pdf] wrote", OUT_PDF);
 })().catch((err) => {
   console.error("[pdf] failed:", err);
   process.exit(1);
