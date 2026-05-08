@@ -12,8 +12,9 @@ generator. Content is written in Simplified Chinese Markdown.
 ## Commands
 
 ```bash
-npm run serve   # Development server with live reload at localhost:4000
-npm run build   # Build static site to _book/
+npm run serve            # Development server with live reload at localhost:4000
+npm run build            # Build static site to _book/
+npm run pdf [out.pdf]    # Build book.pdf via headless Chromium (default: ./book.pdf)
 ```
 
 Custom CSS and JS are loaded via `_layouts/website/page.html` (Honkit layout
@@ -21,14 +22,61 @@ override), so both `serve` and `build` get the same result. No manual post-build
 injection is needed. Each asset URL carries `?v={{ asset_v }}` (derived from
 `gitbook.time`) for cache busting on rebuilds.
 
+### PDF build (`npm run pdf`)
+
+Do **not** use `npx honkit pdf …`. HonKit's built-in PDF flow goes through
+Calibre's `ebook-convert`, which on Calibre 9.x produces a PDF whose outline
+(left-side bookmarks) collapses every chapter to page 1
+([honkit/honkit#117](https://github.com/honkit/honkit/issues/117)).
+
+`scripts/build-pdf.js` instead:
+1. Runs `honkit build` if `_book/` is missing.
+2. Reads `SUMMARY.md` for chapter order (mapping `README.md` → `index.html`).
+3. Pulls the `<section class="normal markdown-section">` body out of each
+   chapter HTML, drops the per-page `tbfed-pagefooter` timestamp, and
+   concatenates them into a single print-friendly HTML at
+   `_book/_print-all.html` (auto-deleted after the run).
+4. Sets `<base href>` to `_book/` so relative image / KaTeX paths resolve.
+5. Loads:
+   - `gitbook/honkit-plugin-katex/katex.min.css` — KaTeX math rendering
+   - `gitbook/style.css` — for Bootstrap-style `.alert*` classes + Font
+     Awesome (used by `{% hint style='…' %}` blocks). Loaded **before**
+     `custom.css` so our typography still wins where they overlap.
+   - `gitbook/gitbook-plugin-hints/plugin-hints.css` — `.hints-icon` /
+     `.hints-container` table-cell layout
+   - `styles/custom.css` — main typography
+   - inline print overrides — hide all chrome (sidebar, search,
+     share-anchor, page-toc, back-to-top, page-footer), restore native
+     `<table>` layout (custom.css's web-scroll behavior would clip wide
+     tables in print), and force `page-break-before: always` between
+     chapters.
+6. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
+   Chromium auto-generates a clickable PDF outline from `<h1>`/`<h2>`/`<h3>`.
+
+`styles/pdf.css` is intentionally NOT loaded by this flow — its
+`@page { @bottom-center { content: counter(page) }}` would draw a second
+page number stacked on top of puppeteer's `footerTemplate`. The file stays
+in the repo only as a fallback for `npx honkit pdf`.
+
+If you change website chrome (new floating element, new auto-injected button,
+etc.), add a hide rule to the `/* PDF print overrides */` block in
+`scripts/build-pdf.js`, otherwise it will leak into the PDF.
+
 ## Architecture
 
 - `SUMMARY.md` — Table of contents; controls the book's chapter structure
 - `book.json` — Honkit config (plugins, language, footer settings)
 - `_layouts/website/page.html` — Layout override that loads custom CSS/JS via
   `<link>`/`<script>` tags
-- `styles/custom.css` — Custom CSS (loaded by layout override)
-- `scripts/` — Custom JavaScript files (loaded by layout override, in order):
+- `styles/custom.css` — Web-only CSS (loaded by `_layouts/website/page.html`).
+  Does **not** apply to PDF/ebook output.
+- `styles/pdf.css` — PDF-only CSS (declared via `styles.pdf` in `book.json`,
+  used by `npx honkit pdf ./ ./book.pdf`). When changing typography that
+  should appear in both web and PDF (heading alignment, font, etc.), update
+  **both** files.
+- `scripts/` — JavaScript files. Web-runtime scripts are loaded by
+  `_layouts/website/page.html` in this order; `build-pdf.js` is a Node-side
+  build tool, **not** loaded into pages:
   - `table-scroll-hints.js` — Horizontal scroll shadow hints on overflowing tables
   - `share-links.js` — "复制链接" button injected into every heading with an `id`
   - `image-performance.js` — `loading="lazy"` / `decoding="async"` on body images
@@ -38,6 +86,7 @@ injection is needed. Each asset URL carries `?v={{ asset_v }}` (derived from
   - `scroll-memory.js` — Restore scroll position when revisiting a page
   - `reading-progress.js` — Top-of-page reading progress bar
   - `page-toc.js` — Per-page floating TOC of `H2` headings (desktop ≥ 1280px)
+  - `build-pdf.js` — Node script run by `npm run pdf` (see PDF build section)
 - `images/` — Genealogy chart images (JPGs)
 - `_book/` — Build output, gitignored
 
@@ -50,7 +99,8 @@ adding new pages. The book uses the `katex` plugin for math rendering and
 ### Editing conventions
 
 - **Headings**: `H1` is centered (page/chapter title), `H2`/`H3`/`H4` are
-  left-aligned (handled by `styles/custom.css`, do not override per-page).
+  left-aligned. Implemented in **both** `styles/custom.css` (web) and
+  `styles/pdf.css` (PDF) — keep them in sync. Do not override per-page.
 - **Punctuation**: Use full-width Chinese punctuation throughout, including
   `（）` `；` `：` `，` `。` `"" ''`. Avoid mixing half-width `()` `;` `:`
   with Chinese text.

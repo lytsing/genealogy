@@ -47,13 +47,14 @@ h1 {
   color: #222;
 }
 
+/* H2 起左对齐，与 web 端层级感保持一致 */
 h2 {
   font-size: 1.5em;
   font-weight: 600;
   margin-top: 1.2em;
   margin-bottom: 0.6em;
   page-break-after: avoid;
-  text-align: center;
+  text-align: left;
   line-height: 1.4;
   letter-spacing: 0.03em;
   color: #333;
@@ -65,9 +66,20 @@ h3 {
   margin-top: 1em;
   margin-bottom: 0.5em;
   page-break-after: avoid;
-  text-align: center;
+  text-align: left;
   line-height: 1.4;
   color: #444;
+}
+
+h4 {
+  font-size: 1.05em;
+  font-weight: 600;
+  margin-top: 0.9em;
+  margin-bottom: 0.4em;
+  page-break-after: avoid;
+  text-align: left;
+  line-height: 1.4;
+  color: #555;
 }
 
 /* 引用块美化 */

@@ -1,12 +1,14 @@
 {
     "scripts": {
         "build": "honkit build",
-        "serve": "honkit serve"
+        "serve": "honkit serve",
+        "pdf": "node scripts/build-pdf.js"
     },
     "devDependencies": {
         "gitbook-plugin-hints": "^1.0.2",
         "honkit": "^6.1.7",
-        "honkit-plugin-tbfed-pagefooter": "^0.0.8"
+        "honkit-plugin-tbfed-pagefooter": "^0.0.8",
+        "puppeteer": "^24.43.0"
     },
     "dependencies": {
         "gitbook-plugin-search-pro": "^2.0.2",
