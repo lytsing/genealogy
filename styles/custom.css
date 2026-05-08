@@ -523,3 +523,128 @@ body {
 .book.color-theme-2 .markdown-section a {
   text-underline-offset: 0.2em;
 }
+
+/* ===== Per-page TOC (页内章节目录) ===== */
+.page-toc {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .page-toc {
+    display: block;
+    position: fixed;
+    top: 96px;
+    right: 16px;
+    width: 180px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 12px 14px;
+    z-index: 800;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .page-toc {
+    width: 200px;
+    right: 24px;
+  }
+}
+
+.page-toc__title {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.page-toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-toc__item {
+  margin: 0;
+  padding: 0;
+}
+
+.page-toc__link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-left: 2px solid transparent;
+  padding: 6px 8px;
+  margin: 0;
+  color: #4b5563;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+}
+
+.page-toc__link:hover,
+.page-toc__link:focus {
+  color: #1f2937;
+  background: rgba(0, 0, 0, 0.03);
+  outline: none;
+}
+
+.page-toc__item--active .page-toc__link {
+  color: #4b7cf3;
+  border-left-color: #4b7cf3;
+  background: rgba(75, 124, 243, 0.06);
+  font-weight: 600;
+}
+
+/* Dark theme */
+.book.color-theme-2 .page-toc {
+  background: rgba(35, 42, 56, 0.9);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.book.color-theme-2 .page-toc__title {
+  color: #9aa5b1;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.book.color-theme-2 .page-toc__link {
+  color: #cdd6e3;
+}
+
+.book.color-theme-2 .page-toc__link:hover,
+.book.color-theme-2 .page-toc__link:focus {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.book.color-theme-2 .page-toc__item--active .page-toc__link {
+  color: #8ec5ff;
+  border-left-color: #8ec5ff;
+  background: rgba(142, 197, 255, 0.12);
+}
+
+/* RN WebView 内隐藏（与 back-to-top 一致） */
+.in-rn-webview .page-toc {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-toc__link {
+    transition: none;
+  }
+}
