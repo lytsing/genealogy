@@ -124,8 +124,8 @@ _说明：以上只列出宝陋支系之马山周鹿内沾屯，其他屯更多�
   <li><a href="assets/images/page-24.jpg" target="_blank" rel="noopener">宝陋支系——外百良屯 上页</a></li>
   <li><a href="assets/images/page-25.jpg" target="_blank" rel="noopener">宝陋支系——外百良屯 下页</a></li>
   <li><a href="assets/images/page-27.jpg" target="_blank" rel="noopener">文光一族</a></li>
-  <li><a href="assets/images/page-28.jpg" target="_blank" rel="noopener">宝陋支系——马山周鹿石马屯（外屯) 上页</a></li>
-  <li><a href="assets/images/page-29.jpg" target="_blank" rel="noopener">宝陋支系——马山周鹿石马屯（外屯) 下页</a></li>
+  <li><a href="assets/images/page-28.jpg" target="_blank" rel="noopener">宝陋支系——马山周鹿石马屯（外屯）上页</a></li>
+  <li><a href="assets/images/page-29.jpg" target="_blank" rel="noopener">宝陋支系——马山周鹿石马屯（外屯）下页</a></li>
 </ul>
 
 {% hint style='tip' %}
