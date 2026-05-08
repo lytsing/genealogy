@@ -92,5 +92,3 @@ _注：原文繁体字，无标点_
 <p style="text-align:right">主建人：黄喜机</p>
 
 <p style="text-align:right">1830 年 4 月 7 日吉日立</p>
-
-
