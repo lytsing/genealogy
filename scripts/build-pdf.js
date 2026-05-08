@@ -87,6 +87,14 @@ function extractSection(html) {
     ""
   );
 
+  // HonKit serializes a single markdown <br> as `<br></br>` (XML-style void
+  // close). Chromium parses the stray </br> end tag as another <br> start
+  // tag, doubling the intended line break — most visible in verse / poetry
+  // blocks (e.g. 谱首寄语). First drop any </br>, then collapse runs of
+  // consecutive <br> tags back to a single one.
+  body = body.replace(/<\/br>/gi, "");
+  body = body.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>");
+
   // Strip empty <p></p> tags that HonKit emits around its plugin output
   // (tbfed-pagefooter, hints) — they leave 1.85em of vertical air per
   // empty paragraph and can push an otherwise-fitting block onto a new
@@ -113,9 +121,6 @@ function extractSection(html) {
   // in PDF they're dead links because the relative path doesn't resolve
   // in the reader. Convert each list of such links into a stack of
   // <figure> blocks so the actual scan is embedded in the PDF.
-  // In the web view these open the JPG in a new tab; in PDF they're dead links because
-  // the relative path doesn't resolve in the reader. Convert each list of such links
-  // into a stack of <figure> blocks so the actual scan is embedded in the PDF.
   body = body.replace(
     /<ul>\s*((?:<li>\s*<a\s+href="(?:assets\/images\/[^"]+)"[^>]*>[^<]+<\/a>\s*<\/li>\s*)+)<\/ul>/g,
     (_, lis) => {
@@ -143,6 +148,36 @@ function extractSection(html) {
 // footer — not very book-like. Here we drop the H1 (the cover image already
 // contains the title + 主编 + 编写组 + 年月), give the image room to breathe,
 // and add an electronic-edition attribution under it.
+// Build a printed Table of Contents page that comes right after the cover.
+// Chromium's CSS target-counter() does NOT work in headless print mode
+// (verified empirically — entries render with empty page numbers), so we
+// instead use a 2-pass build:
+//   pass 1 — render with empty <span class="toc-page"></span> placeholders
+//            (sized via min-width so layout is stable)
+//   pass 2 — read the auto-generated PDF outline, map chapter -> page,
+//            and re-render with the actual numbers filled in.
+// The cover (idx=0) is excluded from the TOC.
+function buildTocArticle(items, chapterPageMap) {
+  const rows = items
+    .map((it, idx) => {
+      if (idx === 0 && it.html === "index.html") return null;
+      const title = escapeHtml(it.title);
+      const pageNum =
+        chapterPageMap && chapterPageMap.get(idx) != null
+          ? String(chapterPageMap.get(idx))
+          : "";
+      return `    <li><a href="#ch-${idx}"><span class="toc-title">${title}</span><span class="toc-page">${pageNum}</span></a></li>`;
+    })
+    .filter(Boolean)
+    .join("\n");
+  return `<article class="pdf-chapter pdf-toc">
+  <h1>目　录</h1>
+  <ol class="toc-list">
+${rows}
+  </ol>
+</article>`;
+}
+
 function buildCoverArticle(meta) {
   return `<article class="pdf-chapter pdf-cover">
   <img src="cover.jpg" alt="${escapeAttr(meta.title)} 封面" class="cover-image">
@@ -165,7 +200,7 @@ function escapeHtml(s) {
   );
 }
 
-function buildCombinedHtml(items, meta) {
+function buildCombinedHtml(items, meta, chapterPageMap) {
   const customCss = fs.readFileSync(
     path.join(ROOT, "styles/custom.css"),
     "utf8"
@@ -181,6 +216,10 @@ function buildCombinedHtml(items, meta) {
     // Replace the README/index page with a custom cover layout.
     if (idx === 0 && it.html === "index.html") {
       sections.push(buildCoverArticle(meta));
+      // Insert a printed TOC right after the cover. Page numbers are
+      // populated by the second render pass; pass 1 renders empty
+      // (but width-stable) placeholders so pagination is identical.
+      sections.push(buildTocArticle(items, chapterPageMap));
       return;
     }
     const file = path.join(BOOK_DIR, it.html);
@@ -194,7 +233,7 @@ function buildCombinedHtml(items, meta) {
       console.warn("[pdf] could not extract markdown-section from:", it.html);
       return;
     }
-    sections.push(`<article class="pdf-chapter">${sec}</article>`);
+    sections.push(`<article class="pdf-chapter" id="ch-${idx}">${sec}</article>`);
   });
 
   // Trailing slash so relative URLs (e.g. images/foo.jpg, gitbook/...) resolve.
@@ -351,6 +390,115 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
 .pdf-chapter h3,
 .pdf-chapter h4 { line-height: 1.4; }
 
+/* === Print heading sizes ===
+   GitBook's defaults render H1 at ~24pt on a 12pt body — too large for a
+   bound A4 book (Calibre's H1 ≈ 16.49pt for reference). Scale down across
+   the board to a more book-like hierarchy. Cover keeps its own typography
+   above (.pdf-cover doesn't use markdown headings). */
+.pdf-chapter:not(.pdf-cover):not(.pdf-toc) h1 {
+  font-size: 20pt !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.6em !important;
+}
+.pdf-chapter:not(.pdf-cover) h2 { font-size: 14pt !important; }
+.pdf-chapter:not(.pdf-cover) h3 {
+  font-size: 12.5pt !important;
+  font-weight: 600 !important;
+}
+.pdf-chapter:not(.pdf-cover) h4 {
+  font-size: 11.5pt !important;
+  font-weight: 600 !important;
+}
+
+/* === Link colors in print ===
+   Bright blue underlined links from custom.css are eye-catching in a screen
+   reader but distract on paper, where they're not clickable. Tone them down
+   to a near-body color with a subtle gray underline. TOC entries and their
+   own decorations are exempted further down. */
+.markdown-section a,
+.markdown-section a:visited {
+  color: #333 !important;
+  text-decoration: underline;
+  text-decoration-color: #999;
+  text-decoration-thickness: 0.5pt;
+  text-underline-offset: 2px;
+}
+/* Headings may include nested anchor tags (share-anchor, id targets);
+   keep them inheriting the heading color and avoid an underline. */
+.markdown-section h1 a,
+.markdown-section h2 a,
+.markdown-section h3 a,
+.markdown-section h4 a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* === Printed Table of Contents ===
+   Page numbers are filled in by Chromium via CSS target-counter() against
+   the id="ch-N" attribute on each chapter article — no JS post-processing
+   needed. Layout uses a per-row flex (title left / page right) with a thin
+   dotted border at the bottom of each row. Avoiding inline dot leaders
+   keeps the typography reliable across Chromium versions. */
+.pdf-toc {
+  page-break-after: always;
+  break-after: page;
+}
+.pdf-toc h1 {
+  text-align: center !important;
+  font-size: 22pt !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4em;
+  margin: 0 0 1.2em !important;
+  padding-top: 6mm;
+}
+.pdf-toc .toc-list {
+  list-style: none;
+  padding: 0 6mm;
+  margin: 0;
+  counter-reset: toc-item;
+}
+.pdf-toc .toc-list li {
+  counter-increment: toc-item;
+  margin: 0;
+  border-bottom: 1px dotted #d0d0d0;
+}
+.pdf-toc .toc-list li:last-child {
+  border-bottom: none;
+}
+.pdf-toc .toc-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  text-decoration: none !important;
+  color: #333 !important;
+  font-size: 11.5pt;
+  line-height: 1.6;
+  padding: 0.55em 0.2em;
+}
+.pdf-toc .toc-list a::before {
+  content: counter(toc-item, decimal-leading-zero);
+  display: inline-block;
+  width: 2.4em;
+  color: #999;
+  font-variant-numeric: tabular-nums;
+  font-size: 10pt;
+  flex: 0 0 auto;
+}
+.pdf-toc .toc-list a > .toc-title {
+  flex: 1 1 auto;
+  padding-right: 0.6em;
+}
+/* Page numbers are filled in by the second render pass (see writeTocPages
+   in the build script); pass 1 leaves these spans empty but width-stable. */
+.pdf-toc .toc-list a > .toc-page {
+  flex: 0 0 auto;
+  display: inline-block;
+  text-align: right;
+  min-width: 2.2em;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Blockquotes (e.g. 《遣子诗》): give them a real card so they read as a
    distinct quoted block, not just an indent. */
 .markdown-section blockquote {
@@ -485,6 +633,48 @@ ${sections.join("\n")}
 </html>`;
 }
 
+// Walk the auto-generated PDF outline to recover {title, page} for each
+// top-level entry. The outline is created by Chromium from H1 headings,
+// so its order matches `items` (skipping the cover, which has no H1).
+// First entry is the TOC's own "目　录" heading; chapters follow.
+async function readOutlinePages(pdfPath) {
+  const { PDFDocument, PDFName, PDFArray } = require("pdf-lib");
+  const doc = await PDFDocument.load(fs.readFileSync(pdfPath));
+  const ctx = doc.context;
+  const root = doc.catalog;
+  const outlinesRef = root.get(PDFName.of("Outlines"));
+  if (!outlinesRef) return [];
+  const outlines = ctx.lookup(outlinesRef);
+  if (!outlines) return [];
+  const pageRefs = doc.getPages().map((p) => p.ref);
+  const pageOf = (destRef) => {
+    if (!destRef) return null;
+    const target = destRef instanceof PDFArray ? destRef.get(0) : destRef;
+    for (let i = 0; i < pageRefs.length; i++) {
+      if (pageRefs[i].toString() === target.toString()) return i + 1;
+    }
+    return null;
+  };
+  const out = [];
+  let cur = outlines.get(PDFName.of("First"));
+  while (cur) {
+    const node = ctx.lookup(cur);
+    const titleObj = node.get(PDFName.of("Title"));
+    const title = titleObj && titleObj.decodeText ? titleObj.decodeText() : "";
+    let p = pageOf(node.get(PDFName.of("Dest")));
+    if (p == null) {
+      const action = node.get(PDFName.of("A"));
+      if (action) {
+        const a = ctx.lookup(action);
+        p = pageOf(a.get(PDFName.of("D")));
+      }
+    }
+    out.push({ title, page: p });
+    cur = node.get(PDFName.of("Next"));
+  }
+  return out;
+}
+
 async function writeMetadata(pdfPath, meta) {
   // Chromium writes a garbled UTF-8 Title and an empty Author/Subject/Keywords.
   // Re-open the PDF with pdf-lib to set proper Chinese metadata so file
@@ -514,6 +704,52 @@ async function writeMetadata(pdfPath, meta) {
   fs.writeFileSync(pdfPath, out);
 }
 
+function findSystemBrowser() {
+  // Prefer a system Chromium-family browser so we don't depend on the
+  // ~150MB binary that puppeteer pins to a specific Chrome version. Fall
+  // back to puppeteer's bundled Chromium if no system browser is found.
+  const candidates = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
+    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    "/usr/bin/microsoft-edge",
+  ];
+  for (const p of candidates) if (fs.existsSync(p)) return p;
+  return null;
+}
+
+async function renderHtmlToPdf(browser, htmlPath, outPdfPath) {
+  const page = await browser.newPage();
+  try {
+    await page.goto("file://" + htmlPath, {
+      waitUntil: "networkidle0",
+      timeout: 60000,
+    });
+    await page.evaluate(() => document.fonts && document.fonts.ready);
+    await page.pdf({
+      path: outPdfPath,
+      format: "A4",
+      printBackground: true,
+      displayHeaderFooter: true,
+      headerTemplate: '<div style="font-size:0;"></div>',
+      footerTemplate:
+        '<div style="font-size:9pt;width:100%;text-align:center;color:#888;font-family:\'PingFang SC\',\'Hiragino Sans GB\',sans-serif"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+      margin: { top: "18mm", bottom: "18mm", left: "16mm", right: "16mm" },
+      // Chromium auto-derives outline entries from <h1>/<h2>/<h3> when these
+      // are enabled (puppeteer ≥ 22 / Chromium ≥ 119).
+      tagged: true,
+      outline: true,
+    });
+  } finally {
+    await page.close();
+  }
+}
+
 (async () => {
   ensureBuild();
   const items = readSummary();
@@ -524,9 +760,7 @@ async function writeMetadata(pdfPath, meta) {
   console.log(`[pdf] found ${items.length} chapters`);
 
   const meta = readBookMeta();
-  const combined = buildCombinedHtml(items, meta);
   const tmpHtml = path.join(BOOK_DIR, "_print-all.html");
-  fs.writeFileSync(tmpHtml, combined, "utf8");
 
   let puppeteer;
   try {
@@ -538,34 +772,14 @@ async function writeMetadata(pdfPath, meta) {
     process.exit(1);
   }
 
-  // Prefer a system Chromium-family browser so we don't depend on the
-  // ~150MB binary that puppeteer pins to a specific Chrome version. Fall
-  // back to puppeteer's bundled Chromium if no system browser is found.
-  const systemCandidates = [
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
-    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
-    "/Applications/Chromium.app/Contents/MacOS/Chromium",
-    "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
-    "/usr/bin/google-chrome",
-    "/usr/bin/chromium",
-    "/usr/bin/chromium-browser",
-    "/usr/bin/microsoft-edge",
-  ];
-  let executablePath;
-  for (const p of systemCandidates) {
-    if (fs.existsSync(p)) {
-      executablePath = p;
-      break;
-    }
-  }
-
+  const executablePath = findSystemBrowser();
   const launchOpts = executablePath ? { executablePath } : {};
   if (executablePath) {
     console.log("[pdf] using system browser:", executablePath);
   } else {
     console.log("[pdf] launching puppeteer's bundled Chromium…");
   }
+
   let browser;
   try {
     browser = await puppeteer.launch(launchOpts);
@@ -581,35 +795,45 @@ async function writeMetadata(pdfPath, meta) {
     }
     throw e;
   }
-  try {
-    const page = await browser.newPage();
-    await page.goto("file://" + tmpHtml, {
-      waitUntil: "networkidle0",
-      timeout: 60000,
-    });
-    // Give web fonts a beat to settle before paginating.
-    await page.evaluate(() => document.fonts && document.fonts.ready);
 
-    await page.pdf({
-      path: OUT_PDF,
-      format: "A4",
-      printBackground: true,
-      displayHeaderFooter: true,
-      headerTemplate: '<div style="font-size:0;"></div>',
-      footerTemplate:
-        '<div style="font-size:9pt;width:100%;text-align:center;color:#888;font-family:\'PingFang SC\',\'Hiragino Sans GB\',sans-serif"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
-      margin: { top: "18mm", bottom: "18mm", left: "16mm", right: "16mm" },
-      // Chromium auto-derives outline entries from <h1>/<h2>/<h3> when these
-      // are enabled (puppeteer ≥ 22 / Chromium ≥ 119).
-      tagged: true,
-      outline: true,
+  try {
+    // Pass 1: render with empty TOC page numbers (still width-stable so the
+    // pagination is identical between the two passes).
+    console.log("[pdf] pass 1/2 — initial render to discover chapter pages");
+    fs.writeFileSync(
+      tmpHtml,
+      buildCombinedHtml(items, meta, null),
+      "utf8"
+    );
+    await renderHtmlToPdf(browser, tmpHtml, OUT_PDF);
+
+    // Read the auto-generated outline (skip the leading "目　录" entry which
+    // belongs to the TOC page itself; remaining entries align 1:1 with the
+    // non-cover chapters in `items`).
+    const outline = await readOutlinePages(OUT_PDF);
+    const chapterPageMap = new Map();
+    let oi = outline[0] && outline[0].title.trim().startsWith("目") ? 1 : 0;
+    items.forEach((it, idx) => {
+      if (idx === 0 && it.html === "index.html") return;
+      const ol = outline[oi++];
+      if (ol && ol.page != null) chapterPageMap.set(idx, ol.page);
     });
+
+    // Pass 2: re-render with TOC page numbers populated.
+    console.log("[pdf] pass 2/2 — rendering with TOC page numbers");
+    fs.writeFileSync(
+      tmpHtml,
+      buildCombinedHtml(items, meta, chapterPageMap),
+      "utf8"
+    );
+    await renderHtmlToPdf(browser, tmpHtml, OUT_PDF);
   } finally {
     await browser.close();
     try {
       fs.unlinkSync(tmpHtml);
     } catch (_) {}
   }
+
   await writeMetadata(OUT_PDF, meta);
   console.log("[pdf] wrote", OUT_PDF);
 })().catch((err) => {

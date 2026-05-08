@@ -9,6 +9,7 @@
 
 {% block javascript %}
     {{ super() }}
+    <script src="{{ "scripts/fix-double-br.js"|resolveFile }}?v={{ asset_v }}"></script>
     <script src="{{ "scripts/table-scroll-hints.js"|resolveFile }}?v={{ asset_v }}"></script>
     <script src="{{ "scripts/share-links.js"|resolveFile }}?v={{ asset_v }}"></script>
     <script src="{{ "scripts/image-performance.js"|resolveFile }}?v={{ asset_v }}"></script>

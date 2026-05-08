@@ -245,6 +245,12 @@ body {
   border-left-color: rgba(0, 0, 0, 0.16);
 }
 
+/* 引用块内段落不首行缩进（诗、文言文、注释等已经靠左侧线条
+   与正文区分开，再缩进 2em 反而显得错位） */
+.markdown-section blockquote p {
+  text-indent: 0;
+}
+
 /* ===== Images: prevent overflow ===== */
 .markdown-section img {
   display: block;

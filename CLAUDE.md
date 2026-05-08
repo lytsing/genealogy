@@ -54,17 +54,32 @@ Calibre's `ebook-convert`, which on Calibre 9.x produces a PDF whose outline
    with a print-friendly cover layout: enlarged scan + subtitle + electronic
    edition attribution. The H1 is dropped because the cover scan already
    contains the title / 主编 / 编写组 / 印刷年月.
-7. **Inlines external image links** during HTML extraction: any
+7. **Printed TOC** is inserted right after the cover, listing every chapter
+   from `SUMMARY.md` (excluding the cover) with its page number. Page
+   numbers are populated by a **two-pass render**: pass 1 renders with
+   width-stable empty placeholders, then `readOutlinePages()` walks the
+   auto-generated PDF outline (via `pdf-lib`) to map each chapter title
+   to its page; pass 2 re-renders with the numbers filled in. CSS
+   `target-counter()` was tried first but is not implemented in
+   Chromium's headless print pipeline (verified empirically — pages
+   render blank).
+8. **Inlines external image links** during HTML extraction: any
    `<a href="assets/images/page-XX.jpg">` is replaced with a `<figure>`
    containing the actual image + caption, so the paper genealogy scans
    show up inline in the PDF instead of as dead links.
-8. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
-   Chromium auto-generates a clickable PDF outline from `<h1>`/`<h2>`/`<h3>`.
-9. Re-opens the resulting PDF with **`pdf-lib`** to write proper UTF-8
-   metadata (Title / Author / Subject / Keywords / Creator / Producer)
-   sourced from `book.json`. Chromium otherwise emits a garbled Title and
-   leaves Author/Subject/Keywords blank. The outline tree and tagged-PDF
-   structure are preserved across this re-save.
+9. **Print-tuned typography**: H1 is dialed down from GitBook's default
+   ~24pt to 20pt (closer to traditional Chinese book hierarchies; Calibre
+   uses ~16.5pt for reference), H2 to 14pt, H3/H4 to 12.5/11.5pt with
+   bold weight. Body links are recolored from bright blue to body color
+   (#333) with a subtle gray underline since they're not clickable on
+   paper anyway.
+10. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
+    Chromium auto-generates a clickable PDF outline from `<h1>`/`<h2>`/`<h3>`.
+11. Re-opens the resulting PDF with **`pdf-lib`** to write proper UTF-8
+    metadata (Title / Author / Subject / Keywords / Creator / Producer)
+    sourced from `book.json`. Chromium otherwise emits a garbled Title and
+    leaves Author/Subject/Keywords blank. The outline tree and tagged-PDF
+    structure are preserved across this re-save.
 
 `styles/pdf.css` is intentionally NOT loaded by this flow — its
 `@page { @bottom-center { content: counter(page) }}` would draw a second
@@ -90,6 +105,9 @@ etc.), add a hide rule to the `/* PDF print overrides */` block in
 - `scripts/` — JavaScript files. Web-runtime scripts are loaded by
   `_layouts/website/page.html` in this order; `build-pdf.js` is a Node-side
   build tool, **not** loaded into pages:
+  - `fix-double-br.js` — Collapse the duplicate `<br><br>`s caused by
+    HonKit serializing `<br>` as `<br></br>` (Chromium re-parses the stray
+    `</br>` as another `<br>`). Same fix is applied during PDF extraction.
   - `table-scroll-hints.js` — Horizontal scroll shadow hints on overflowing tables
   - `share-links.js` — "复制链接" button injected into every heading with an `id`
   - `image-performance.js` — `loading="lazy"` / `decoding="async"` on body images
