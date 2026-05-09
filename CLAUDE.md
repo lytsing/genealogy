@@ -73,19 +73,39 @@ Calibre's `ebook-convert`, which on Calibre 9.x produces a PDF whose outline
    bold weight. Body links are recolored from bright blue to body color
    (#333) with a subtle gray underline since they're not clickable on
    paper anyway.
-10. **Running header / footer via CSS `@page`**: each chapter article is
-    assigned a unique named page (`page: chN`) and the script emits one
-    `@page chN { @top-right { content: "<chapter title>" } }` rule per
-    chapter. Combined with default `@page` (top-left = book title,
-    bottom-center = `X / Y`), `@page :first` / `@page cover` (cover hides
-    everything), and `@page toc` (TOC keeps page number, hides chapter
-    name), each printed page now shows a running header with the current
-    chapter title for quick flipping. Puppeteer's `displayHeaderFooter`
-    is therefore **off** — both header and footer are CSS-driven, with
+10. **Running header / footer via CSS `@page` (mirror layout)**: each
+    chapter article is assigned a unique named page (`page: chN`). The
+    script emits per-chapter `@page chN:left { @top-left { content:
+    "<title>" } }` and `@page chN:right { @top-right { content:
+    "<title>" } }` rules so the chapter title always sits on the
+    **outer** corner of each page (left of even pages, right of odd
+    pages — standard double-sided book convention). The book title is
+    set once in `@page :left { @top-right }` / `@page :right { @top-left
+    }` defaults so it always sits on the **inner** corner. `@page :first`
+    / `@page cover` clears everything for the cover; `@page toc` keeps
+    only the bottom page number. Puppeteer's `displayHeaderFooter` is
+    therefore **off** — both header and footer are CSS-driven, with
     `preferCSSPageSize: true` so the CSS `@page` margins win. We tried
     CSS GCPM `string-set` + `string()` first; it was silently ignored by
     Chromium's headless print pipeline (the named string never made it
     into the margin box), hence the per-chapter named-page workaround.
+
+    **Known limitation**: hiding the running header on the *first* page
+    of each chapter (a common book convention so the small running header
+    doesn't visually duplicate the H1) is **not implemented**. CSS
+    `@page chN:first` only matches if the named page is the first page
+    of the *document*, not the first page of that chapter — verified
+    empirically against Chromium. Workarounds (splitting each chapter
+    into a "title-page article" + "body article", or using a sentinel
+    element to switch named pages mid-chapter) all add ≥1 page per
+    chapter, which is not worth the trade-off for a 60-page book where
+    most chapters are 1–2 pages long. The 9pt gray running header
+    visually doesn't compete with the 20pt centered H1 in practice.
+
+    Body text additionally enables `line-break: strict`,
+    `text-spacing-trim: trim-start`, and `hanging-punctuation: allow-end
+    last` for cleaner CJK punctuation behavior (jinze 禁则). The latter
+    two are partially supported in Chromium and degrade silently.
 11. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
     Chromium auto-generates a clickable PDF outline from `<h1>`/`<h2>`/`<h3>`.
 12. Re-opens the resulting PDF with **`pdf-lib`** to write proper UTF-8

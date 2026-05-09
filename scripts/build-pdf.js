@@ -251,11 +251,16 @@ function buildCombinedHtml(items, meta, chapterPageMap) {
     );
   });
 
+  const headerStyle =
+    "font-size: 9pt; color: #888; padding-bottom: 4mm; vertical-align: bottom;";
   const perChapterPageRules = chapterPageNames
-    .map(
-      ({ idx, title }) =>
-        `@page ch${idx} { @top-right { content: "${escapeCssString(title)}"; font-size: 9pt; color: #888; padding-bottom: 4mm; vertical-align: bottom; } }`
-    )
+    .map(({ idx, title }) => {
+      const t = escapeCssString(title);
+      return [
+        `@page ch${idx}:left  { @top-left  { content: "${t}"; ${headerStyle} } }`,
+        `@page ch${idx}:right { @top-right { content: "${t}"; ${headerStyle} } }`,
+      ].join("\n");
+    })
     .join("\n");
 
   // Trailing slash so relative URLs (e.g. images/foo.jpg, gitbook/...) resolve.
@@ -296,6 +301,19 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
   max-width: none !important;
   font-size: 12pt;
   line-height: 1.85;
+  /* Chinese typography refinements (jinze 禁则):
+     - line-break: strict        — apply the strictest CJK line-breaking
+       rules (e.g. opening punctuation never trails a line, closing
+       punctuation never leads a line).
+     - text-spacing-trim         — let CJK opening/closing punctuation
+       collapse extra width at the start/end of lines so paragraphs read
+       cleanly without ragged half-em gaps. (Chrome 117+.)
+     - hanging-punctuation       — allow trailing closing punctuation to
+       hang into the right margin where supported. (Safari fully, Chrome
+       behind a flag — graceful no-op otherwise.) */
+  line-break: strict;
+  text-spacing-trim: trim-start;
+  hanging-punctuation: allow-end last;
 }
 
 /* One chapter = one page-break boundary */
@@ -647,17 +665,20 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
 * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
 /* === Running header / footer via CSS GCPM ===
-   Strategy: every content chapter is assigned its own CSS @page name
-   (page: chN on the article element). For each chapter we emit a
-   matching "@page chN { @top-right { content: '<chapter title>'; ... } }"
-   rule below. This is reliable in Chromium; we deliberately do NOT use
-   string-set + string(), which behaves inconsistently in headless PDF
-   rendering.
+   Mirror layout (book convention for double-sided printing):
+     - Even (LEFT) pages : chapter on left (outer), book on right (inner)
+     - Odd  (RIGHT) pages: chapter on right (outer), book on left (inner)
+   Each chapter article is assigned a unique named page (page: chN). We
+   then emit per-chapter "@page chN:left { @top-left { content: ... } }"
+   and "@page chN:right { @top-right { content: ... } }" rules to inject
+   the chapter title into the OUTER corner of each side. The book title
+   is set via the side-only @page :left / @page :right defaults below.
+
+   We deliberately do NOT use CSS string-set + string(): empirically those
+   are silently ignored by Chromium's headless print pipeline.
 
    - Cover (.pdf-cover) → @page cover: no header, no page number.
-   - TOC   (.pdf-toc)   → @page toc:   no chapter header, keeps page number.
-   - Chapters → @page chN: book title (top-left), chapter title (top-right),
-                            page X / Y (bottom-center). */
+   - TOC   (.pdf-toc)   → @page toc:   no chapter header, keeps page number. */
 .pdf-cover { page: cover; }
 .pdf-toc { page: toc; }
 
@@ -665,19 +686,33 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
   size: A4;
   margin: 22mm 16mm 18mm;
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  @top-left {
-    content: "${escapeAttr(meta.title)}";
-    font-size: 9pt;
-    color: #888;
-    padding-bottom: 4mm;
-    vertical-align: bottom;
-  }
   @bottom-center {
     content: counter(page) " / " counter(pages);
     font-size: 9pt;
     color: #888;
     padding-top: 6mm;
     vertical-align: top;
+  }
+}
+
+/* Mirror defaults — book title on the INNER side of each spread.
+   Chapter title (OUTER side) is added per-chapter further below. */
+@page :left {
+  @top-right {
+    content: "${escapeCssString(meta.title)}";
+    font-size: 9pt;
+    color: #888;
+    padding-bottom: 4mm;
+    vertical-align: bottom;
+  }
+}
+@page :right {
+  @top-left {
+    content: "${escapeCssString(meta.title)}";
+    font-size: 9pt;
+    color: #888;
+    padding-bottom: 4mm;
+    vertical-align: bottom;
   }
 }
 
