@@ -15,7 +15,7 @@
 - [黄福军公支系分布示意图](huang-fu-jun-gong-zhi-xi-fen-bu-shi-yi-tu.md)
 - [上始祖分枝图](shang-shi-zu-fen-zhi-tu.md)
 - [历代宗贤录](li-dai-zong-xian-lu.md)
-- [古迹寻踪](gu-ji-xun-zong.md)
+- [古迹寻踪——黄峻冠公其人其事](gu-ji-xun-zong.md)
 - [梅泉文昌阁碑文](mei-quan-wen-chang-ge-bei-wen.md)
 - [修缮黄福军墓及出版族谱捐资名单](xiu-shan-huang-fu-jun-mu-ji-chu-ban-zu-pu-juan-zi-ming-dan.md)
 - [修订说明](xiu-ding-shuo-ming.md)
