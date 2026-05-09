@@ -30,6 +30,82 @@
 - **强调文本** — 加粗文字深化，斜体文字浅化，链接色彩区分访问状态。
 - **其他元素** — 完善 mark、del、ins 的样式处理。
 
+### 自定义 PDF 构建管线（`npm run pdf`）
+
+- **Puppeteer 替代 Calibre** (`scripts/build-pdf.js`) — HonKit 自带的
+  `npx honkit pdf` 走 Calibre `ebook-convert`，在 Calibre 9.x 上生成的 PDF
+  大纲会把所有章节都收缩到第 1 页（HonKit issue #117）。新流水线用
+  Puppeteer (headless Chromium) 直接打印拼接后的章节 HTML，得到可点击且
+  页码精准对应的书签。
+- **可点击 PDF 大纲** — `page.pdf({ tagged: true, outline: true })` 让
+  Chromium 从 `<h1>`/`<h2>`/`<h3>` 自动生成层级书签。
+- **UTF-8 元数据回写** — 用 `pdf-lib` 二次写入
+  Title/Author/Subject/Keywords/Creator/Producer，避免 Chromium 直出的
+  中文 Title 乱码与空白 Author。元数据来源是 `book.json`。
+- **CSS `@page` 驱动版面** — 关闭 puppeteer 的
+  `displayHeaderFooter`，开 `preferCSSPageSize: true`，由 CSS `@page` 完全
+  控制页边距、页眉、页码，便于按页类型（封面/目录/正文）分别配置。
+- **空白页修复** — 提取章节 HTML 时清理 HonKit 序列化遗留的空 `<p></p>`、
+  `<hr></hr>` 等隐形元素，避免独占一页。
+- **`<br></br>` 双换行修复** — HonKit 把 `<br>` 序列化成 `<br></br>`，
+  Chromium 重解析时把 `</br>` 当成另一个 `<br>` 导致诗歌出现双倍行距。
+  构建侧用正则把连续 `<br>` 折叠回单个；Web 端配套 `scripts/fix-double-br.js`
+  在 DOM 加载时做同样的清理。
+
+### 封面、印刷版目录与图片
+
+- **自定义封面页** — 替换 HonKit 默认的 `README.md` 渲染：放大扫描件 +
+  副标题 + 电子版整理者 + 修订年份。`@page :first` / `@page cover` 隐藏
+  封面页的所有页眉与页码。
+- **印刷版目录（两遍渲染）** — 封面后插入 TOC 页（编号 + 标题 + 页码）。
+  CSS `target-counter()` 在 Chromium headless 模式下不可用（实测失效），
+  改用「两遍渲染」：第一遍渲染得到各章节真实页码（用 `pdf-lib` 读取自动
+  生成的 outline 解析），第二遍把页码填入 TOC 重新渲染。
+- **图片内联** — 把 markdown 中 `assets/images/page-XX.jpg` 的链接列表
+  自动转为 `<figure>` + `<img>` + 图注，避免 PDF 里出现无法点击的死链。
+
+### 章节页眉与镜像版面
+
+- **Running header（章节名随页流动）** — 每章 `<article>` 通过
+  `page: chN` 走独立命名页，配合 `@page chN { @top-* { content: "<title>" } }`
+  让每页右上角自动显示当前章节名，方便翻阅。
+- **奇偶页镜像页眉**（双面装订惯例）— `@page chN:left/:right` 把章节名
+  固定在外侧角，`@page :left/:right` 把书名固定在内侧角。
+- **目录页与封面页的特殊处理** — `@page :first` / `@page cover` 完全清空
+  封面的页眉项；`@page toc` 隐藏 TOC 页的章节页眉但保留底部页码。
+- **`string-set` 不可用的备忘** — 起初尝试 CSS GCPM 的 `string-set` +
+  `string()` 实现 running header，被 Chromium headless 静默忽略，故改为
+  上述「每章一个命名页」方案。
+
+### CJK 行内排版（中文禁则）
+
+- **`line-break: strict`** — 强制 CJK 行首行末禁则（`，。、` 不出现在行
+  首；`「（` 不出现在行末）。
+- **`text-spacing-trim: trim-start`** — 行首 CJK 开括号不再留半角空隙
+  （Chrome 117+）。
+- **`hanging-punctuation: allow-end last`** — 行末标点可悬挂到右边距（部
+  分浏览器支持，不支持时静默 no-op）。
+
+### 字号与链接细调
+
+- **章节标题字号收敛** — H1 从 GitBook 默认的 ~24pt 调到 20pt（更接近传
+  统中文书籍层级；Calibre 流水线的 ~16.5pt 作参照），H2 14pt，H3/H4
+  12.5pt / 11.5pt 加粗。
+- **链接配色去蓝** — 正文链接由原本的鲜亮蓝色 + 下划线，改为正文同色
+  (#333) + 浅灰色细下划线，避免 PDF 上出现明显的「不可点击的蓝字」抢戏。
+- **代码块字号精校** — 用 `pdfminer.six` 测量 Calibre 版的代码块实际字号
+  作为参照（约 6.75pt），新流水线对齐到同尺寸，使谱图、宗枝图等
+  ASCII 树状码块在 PDF 中宽度与可读性一致。
+
+### 引用与标题排版
+
+- **一级标题居中、二级及以下左对齐** (`styles/custom.css` /
+  `styles/pdf.css`) — 强化层级感，章节标题居中，节内段落标题左对齐。
+- **引用块首行不缩进** — 全局段落首行 2em 缩进规则不作用于
+  `blockquote p`，让诗歌、自述、署名等不受牵连。
+- **诗歌硬换行格式** (`HEAD.md`) — 七言绝句每句独立成行（行尾两空格触发
+  Markdown 硬换行），节间加空行；解决了 Web 与 PDF 上长行被自动折断的问题。
+
 ## 移动端与阅读体验优化
 
 ### 内容修正
