@@ -73,9 +73,22 @@ Calibre's `ebook-convert`, which on Calibre 9.x produces a PDF whose outline
    bold weight. Body links are recolored from bright blue to body color
    (#333) with a subtle gray underline since they're not clickable on
    paper anyway.
-10. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
+10. **Running header / footer via CSS `@page`**: each chapter article is
+    assigned a unique named page (`page: chN`) and the script emits one
+    `@page chN { @top-right { content: "<chapter title>" } }` rule per
+    chapter. Combined with default `@page` (top-left = book title,
+    bottom-center = `X / Y`), `@page :first` / `@page cover` (cover hides
+    everything), and `@page toc` (TOC keeps page number, hides chapter
+    name), each printed page now shows a running header with the current
+    chapter title for quick flipping. Puppeteer's `displayHeaderFooter`
+    is therefore **off** — both header and footer are CSS-driven, with
+    `preferCSSPageSize: true` so the CSS `@page` margins win. We tried
+    CSS GCPM `string-set` + `string()` first; it was silently ignored by
+    Chromium's headless print pipeline (the named string never made it
+    into the margin box), hence the per-chapter named-page workaround.
+11. Calls puppeteer `page.pdf({ tagged: true, outline: true, … })` so
     Chromium auto-generates a clickable PDF outline from `<h1>`/`<h2>`/`<h3>`.
-11. Re-opens the resulting PDF with **`pdf-lib`** to write proper UTF-8
+12. Re-opens the resulting PDF with **`pdf-lib`** to write proper UTF-8
     metadata (Title / Author / Subject / Keywords / Creator / Producer)
     sourced from `book.json`. Chromium otherwise emits a garbled Title and
     leaves Author/Subject/Keywords blank. The outline tree and tagged-PDF
@@ -83,8 +96,8 @@ Calibre's `ebook-convert`, which on Calibre 9.x produces a PDF whose outline
 
 `styles/pdf.css` is intentionally NOT loaded by this flow — its
 `@page { @bottom-center { content: counter(page) }}` would draw a second
-page number stacked on top of puppeteer's `footerTemplate`. The file stays
-in the repo only as a fallback for `npx honkit pdf`.
+page number stacked on top of the CSS-driven footer in `build-pdf.js`.
+The file stays in the repo only as a fallback for `npx honkit pdf`.
 
 If you change website chrome (new floating element, new auto-injected button,
 etc.), add a hide rule to the `/* PDF print overrides */` block in

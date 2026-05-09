@@ -194,6 +194,15 @@ function escapeAttr(s) {
     ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" }[c])
   );
 }
+function escapeCssString(s) {
+  // Escape characters that would break out of a double-quoted CSS string
+  // value (used inside `content: "..."`). Backslash and double quote are
+  // the only mandatory escapes; newlines must also be encoded.
+  return String(s)
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\r?\n/g, "\\A ");
+}
 function escapeHtml(s) {
   return String(s).replace(/[&<>]/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])
@@ -212,8 +221,11 @@ function buildCombinedHtml(items, meta, chapterPageMap) {
   // typography this flow needs.
 
   const sections = [];
+  // chapterPageNames captures the (idx, title) pairs whose articles
+  // were emitted with `page: chN`, so we can later generate matching
+  // @page rules with per-chapter running headers.
+  const chapterPageNames = [];
   items.forEach((it, idx) => {
-    // Replace the README/index page with a custom cover layout.
     if (idx === 0 && it.html === "index.html") {
       sections.push(buildCoverArticle(meta));
       // Insert a printed TOC right after the cover. Page numbers are
@@ -233,8 +245,18 @@ function buildCombinedHtml(items, meta, chapterPageMap) {
       console.warn("[pdf] could not extract markdown-section from:", it.html);
       return;
     }
-    sections.push(`<article class="pdf-chapter" id="ch-${idx}">${sec}</article>`);
+    chapterPageNames.push({ idx, title: it.title });
+    sections.push(
+      `<article class="pdf-chapter" id="ch-${idx}" style="page: ch${idx};">${sec}</article>`
+    );
   });
+
+  const perChapterPageRules = chapterPageNames
+    .map(
+      ({ idx, title }) =>
+        `@page ch${idx} { @top-right { content: "${escapeCssString(title)}"; font-size: 9pt; color: #888; padding-bottom: 4mm; vertical-align: bottom; } }`
+    )
+    .join("\n");
 
   // Trailing slash so relative URLs (e.g. images/foo.jpg, gitbook/...) resolve.
   const baseHref = "file://" + BOOK_DIR + "/";
@@ -624,7 +646,57 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
 /* Ensure colored backgrounds (e.g. blockquote, code) print */
 * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-@page { size: A4; margin: 18mm 16mm; }
+/* === Running header / footer via CSS GCPM ===
+   Strategy: every content chapter is assigned its own CSS @page name
+   (page: chN on the article element). For each chapter we emit a
+   matching "@page chN { @top-right { content: '<chapter title>'; ... } }"
+   rule below. This is reliable in Chromium; we deliberately do NOT use
+   string-set + string(), which behaves inconsistently in headless PDF
+   rendering.
+
+   - Cover (.pdf-cover) → @page cover: no header, no page number.
+   - TOC   (.pdf-toc)   → @page toc:   no chapter header, keeps page number.
+   - Chapters → @page chN: book title (top-left), chapter title (top-right),
+                            page X / Y (bottom-center). */
+.pdf-cover { page: cover; }
+.pdf-toc { page: toc; }
+
+@page {
+  size: A4;
+  margin: 22mm 16mm 18mm;
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  @top-left {
+    content: "${escapeAttr(meta.title)}";
+    font-size: 9pt;
+    color: #888;
+    padding-bottom: 4mm;
+    vertical-align: bottom;
+  }
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-size: 9pt;
+    color: #888;
+    padding-top: 6mm;
+    vertical-align: top;
+  }
+}
+
+@page cover {
+  @top-left { content: ""; }
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+}
+@page :first {
+  @top-left { content: ""; }
+  @top-right { content: ""; }
+  @bottom-center { content: ""; }
+}
+@page toc {
+  @top-left { content: ""; }
+  @top-right { content: ""; }
+}
+
+${perChapterPageRules}
 </style>
 </head>
 <body class="book">
@@ -735,11 +807,16 @@ async function renderHtmlToPdf(browser, htmlPath, outPdfPath) {
       path: outPdfPath,
       format: "A4",
       printBackground: true,
-      displayHeaderFooter: true,
-      headerTemplate: '<div style="font-size:0;"></div>',
-      footerTemplate:
-        '<div style="font-size:9pt;width:100%;text-align:center;color:#888;font-family:\'PingFang SC\',\'Hiragino Sans GB\',sans-serif"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
-      margin: { top: "18mm", bottom: "18mm", left: "16mm", right: "16mm" },
+      // Header / footer / margins are driven entirely by CSS @page rules
+      // (see "Running header / footer via CSS GCPM" block in the inline
+      // print overrides). This lets us:
+      //   - hide both on the cover (@page :first / @page cover)
+      //   - suppress the chapter header on the TOC (@page toc)
+      //   - inject the running chapter title via string()
+      // displayHeaderFooter must stay false so puppeteer doesn't draw its
+      // own header/footer on top of ours.
+      preferCSSPageSize: true,
+      displayHeaderFooter: false,
       // Chromium auto-derives outline entries from <h1>/<h2>/<h3> when these
       // are enabled (puppeteer ≥ 22 / Chromium ≥ 119).
       tagged: true,
