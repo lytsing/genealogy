@@ -603,7 +603,22 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
   break-inside: avoid;
   font-size: 6.75pt !important;
   line-height: 1.5 !important;
-  font-family: "Menlo", "Monaco", "Consolas", "Courier New", monospace !important;
+  /* Match styles/custom.css: CJK-capable monospace for box-drawing + Han alignment */
+  font-family:
+    ui-monospace,
+    "SFMono-Regular",
+    "SF Mono",
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Noto Sans Mono CJK SC",
+    "Source Han Mono SC",
+    "Droid Sans Mono",
+    monospace !important;
+  letter-spacing: normal !important;
+  font-feature-settings: normal !important;
+  font-variant-east-asian: normal !important;
 }
 .markdown-section pre > code,
 .markdown-section pre code {

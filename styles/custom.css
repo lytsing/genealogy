@@ -78,6 +78,11 @@ body {
   .markdown-section {
     text-spacing-trim: trim-start;
   }
+  /* 代码块内等宽字符 + 汉字混排：trim 在各引擎上易与 monospace 交互不一致（Android 尤甚） */
+  .markdown-section pre,
+  .markdown-section pre > code {
+    text-spacing-trim: none;
+  }
 }
 
 .markdown-section p {
@@ -187,6 +192,29 @@ body {
   border-radius: 10px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* 盒线（┌─┐│）与汉字混排须用 CJK 等宽栈；继承正文无衬线时 Android 与 iOS 字宽比例不一致会错位 */
+.markdown-section pre,
+.markdown-section pre > code {
+  font-family:
+    ui-monospace,
+    "SFMono-Regular",
+    "SF Mono",
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Noto Sans Mono CJK SC",
+    "Source Han Mono SC",
+    "Droid Sans Mono",
+    monospace;
+  letter-spacing: normal;
+  font-feature-settings: normal;
+  font-variant-east-asian: normal;
+  hanging-punctuation: none;
+  white-space: pre;
+  tab-size: 8;
 }
 
 .markdown-section pre > code {
