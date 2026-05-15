@@ -685,7 +685,24 @@ html, body { background: #fff !important; margin: 0; padding: 0; }
 @page {
   size: A4;
   margin: 22mm 16mm 18mm;
-  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  /* Match styles/custom.css --font-body-sc so margin-box text (running headers,
+     page numbers) uses the same CJK fallbacks as body on Linux / headless. */
+  font-family:
+    "PingFang SC",
+    "HarmonyOS Sans SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei UI",
+    "Microsoft YaHei",
+    "Noto Sans CJK SC",
+    "Source Han Sans SC",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "WenQuanYi Micro Hei",
+    "Heiti SC",
+    "STHeiti",
+    sans-serif;
   @bottom-center {
     content: counter(page) " / " counter(pages);
     font-size: 9pt;
